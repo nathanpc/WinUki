@@ -8,9 +8,14 @@
 #include <windows.h>
 #include <commctrl.h>
 #include "WinUkiCE.h"
+#include "Utilities.h"
 
+// Global variables.
 LPCTSTR szAppName = L"WinUki";
 HINSTANCE hInst;
+int uki_error;
+const char *wipath = "\\testuki";
+const char *wipage = "something";
 
 /**
  * Application's main entry point.
@@ -44,6 +49,58 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	// Clean up.
 	return TerminateInstance(hInstance, msg.wParam);
+}
+
+/**
+ * Initializes the Uki environment.
+ */
+int InitializeUki() {
+	uki_variable_t var;
+	uint8_t iv = 0;
+	char *content;
+
+	// Initialize the uki wiki.
+	if ((uki_error = uki_initialize(wipath)) != UKI_OK) {
+		PrintDebugConsole(uki_error_msg(uki_error));
+		uki_clean();
+
+		return 1;
+	}
+
+	// Print configurations.
+	printf("Configurations:\n");
+	var = uki_config(iv);
+	while (var.key != NULL) {
+		PrintDebugConsole("   %s <- %s\n", var.key, var.value);
+		iv++;
+		var = uki_config(iv);
+	}
+	printf("\n");
+
+	// Print variables.
+	printf("Variables:\n");
+	iv = 0;
+	var = uki_variable(iv);
+	while (var.key != NULL) {
+		PrintDebugConsole("   %s <- %s\n", var.key, var.value);
+		iv++;
+		var = uki_variable(iv);
+	}
+	printf("\n");
+
+	// Render a page.
+	if ((uki_error = uki_render_page(&content, wipage)) != UKI_OK) {
+		PrintDebugConsole("ERROR: %s", uki_error_msg(uki_error));
+		uki_clean();
+
+		return 1;
+	}
+
+	// Print the page content.
+	PrintDebugConsole("%s\n", content);
+
+	// Clean up and return.
+	uki_clean();
 }
 
 /**
@@ -156,11 +213,14 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
  */
 LRESULT DoCreateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
 					 LPARAM lParam) {
+	const char *msg;
+
 	// Create CommandBar and add exit button.
 	HWND hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
-	return 0;
+	// Initialize Uki.
+	return InitializeUki();
 }
 
 /**

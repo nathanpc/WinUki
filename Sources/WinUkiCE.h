@@ -8,7 +8,14 @@
 #ifndef _WINUKICE_H
 #define _WINUKICE_H
 
+#include "uki.h"
+
+// Control IDs.
 #define IDC_CMDBAR 1
+
+
+// Uki stuff.
+int InitializeUki();
 
 // Instance operators.
 int InitializeApplication(HINSTANCE hInstance);

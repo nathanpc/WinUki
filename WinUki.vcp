@@ -409,13 +409,14 @@ LINK32=link.exe
 # PROP Intermediate_Dir "X86EMDbg"
 # PROP CPU_ID "{D6518FF4-710F-11D3-99F2-00105A0DF099}"
 # PROP Platform_ID "{8A9A2F80-6887-11D3-842E-005004848CBA}"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 RSC=rc.exe
 # ADD BASE RSC /l 0x409 /d UNDER_CE=$(CEVersion) /d _WIN32_WCE=$(CEVersion) /d "UNICODE" /d "_UNICODE" /d "DEBUG" /d "$(CePlatform)" /d "_X86_" /d "x86" /d "i486" /r
 # ADD RSC /l 0x409 /d UNDER_CE=$(CEVersion) /d _WIN32_WCE=$(CEVersion) /d "UNICODE" /d "_UNICODE" /d "DEBUG" /d "$(CePlatform)" /d "_X86_" /d "x86" /d "i486" /r
 CPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX- /Zi /Od /D "DEBUG" /D "i486" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "WIN32" /D "STRICT" /D "_WIN32_WCE_EMULATION" /D "INTERNATIONAL" /D "USA" /D "INTLMSG_CODEPAGE" /D "$(CePlatform)" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /YX /Gz /c
-# ADD CPP /nologo /W3 /GX- /Zi /Od /D "DEBUG" /D "i486" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "WIN32" /D "STRICT" /D "_WIN32_WCE_EMULATION" /D "INTERNATIONAL" /D "USA" /D "INTLMSG_CODEPAGE" /D "$(CePlatform)" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /YX /Gz /c
+# ADD CPP /nologo /W3 /GX- /Zi /Od /I "Z:\Projects\libuki\src" /D "DEBUG" /D "i486" /D UNDER_CE=$(CEVersion) /D _WIN32_WCE=$(CEVersion) /D "WIN32" /D "STRICT" /D "_WIN32_WCE_EMULATION" /D "INTERNATIONAL" /D "USA" /D "INTLMSG_CODEPAGE" /D "$(CePlatform)" /D "UNICODE" /D "_UNICODE" /D "_X86_" /D "x86" /FR /YX /Gz /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
@@ -424,7 +425,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 commctrl.lib coredll.lib $(CEx86Corelibc)  /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /windowsce:emulation /MACHINE:IX86
-# ADD LINK32 commctrl.lib coredll.lib $(CEx86Corelibc)  /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /windowsce:emulation /MACHINE:IX86
+# ADD LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) LibUki.lib /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /libpath:"Z:\Projects\libuki\X86EMDbg" /windowsce:emulation /MACHINE:IX86
 
 !ENDIF 
 
@@ -445,10 +446,270 @@ LINK32=link.exe
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\Sources\Utilities.c
+
+!IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Debug"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Debug"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Debug"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Debug"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Debug"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Release"
+
+DEP_CPP_UTILI=\
+	".\Sources\Utilities.h"\
+	
+NODEP_CPP_UTILI=\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
+
+DEP_CPP_UTILI=\
+	"..\..\Projects\libuki\src\windowshelper.h"\
+	".\Sources\Utilities.h"\
+	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\Sources\WinUkiCE.c
+
+!IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Debug"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Debug"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Debug"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Debug"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Debug"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Release"
+
+DEP_CPP_WINUK=\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+NODEP_CPP_WINUK=\
+	".\Sources\uki.h"\
+	".\Sources\windowshelper.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
+
+DEP_CPP_WINUK=\
+	"..\..\Projects\libuki\src\config.h"\
+	"..\..\Projects\libuki\src\constants.h"\
+	"..\..\Projects\libuki\src\uki.h"\
+	"..\..\Projects\libuki\src\windowshelper.h"\
+	".\Sources\Utilities.h"\
+	".\Sources\WinUkiCE.h"\
+	
+
+!ENDIF 
+
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\Sources\Utilities.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Sources\WinUkiCE.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 
