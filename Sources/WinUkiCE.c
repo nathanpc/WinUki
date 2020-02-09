@@ -30,9 +30,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				   LPWSTR lpCmdLine, int nShowCmd) {
 	MSG msg;
 	HWND hwndMain;
+	int rc;
 
 	// Initialize the application.
-	int rc = InitializeApplication(hInstance);
+	rc = InitializeApplication(hInstance);
 	if (rc)
 		return 0;
 
@@ -98,9 +99,7 @@ int InitializeUki() {
 
 	// Print the page content.
 	PrintDebugConsole("%s\n", content);
-
-	// Clean up and return.
-	uki_clean();
+	return 0;
 }
 
 /**
@@ -124,7 +123,14 @@ int InitializeApplication(HINSTANCE hInstance) {
 	wc.lpszMenuName = NULL;           // Menu name. (Always NULL)
 	wc.lpszClassName = szAppName;	  // Window class name.
 
-	return RegisterClass(&wc) == 0;
+	// Check if the class registration worked.
+	if (!RegisterClass(&wc)) {
+        MessageBox(NULL, L"Window Registration Failed!", L"Error",
+			MB_ICONEXCLAMATION | MB_OK);
+        return 1;
+    }
+
+	return 0;
 }
 
 /**
@@ -154,8 +160,11 @@ HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow) {
 
 
 	// Check if the window creation worked.
-	if (!IsWindow(hWnd))
-		return 0;
+	if (!IsWindow(hWnd)) {
+		MessageBox(NULL, L"Window Creation Failed!", L"Error",
+            MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+	}
 
 	// Show and update the window.
 	ShowWindow(hWnd, SW_SHOWMAXIMIZED);
@@ -188,15 +197,15 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 								LPARAM lParam) {
 	switch (wMsg) {
 	case WM_CREATE:
-		return DoCreateMain(hWnd, wMsg, wParam, lParam);
-//	case WM_PAINT:
-//		return DoPaintMain(hWnd, wMsg, wParam, lParam);
+		return WndMainCreate(hWnd, wMsg, wParam, lParam);
 //	case WM_HIBERNATE:
-//		return DoHibernateMain(hWnd, wMsg, wParam, lParam);
+//		return WndMainHibernate(hWnd, wMsg, wParam, lParam);
 //	case WM_ACTIVATE:
-//		return DoActivateMain(hWnd, wMsg, wParam, lParam);
+//		return WndMainActivate(hWnd, wMsg, wParam, lParam);
+	case WM_CLOSE:
+		return WndMainClose(hWnd, wMsg, wParam, lParam);
 	case WM_DESTROY:
-		return DoDestroyMain(hWnd, wMsg, wParam, lParam);
+		return WndMainDestroy(hWnd, wMsg, wParam, lParam);
 	}
 
 	return DefWindowProc(hWnd, wMsg, wParam, lParam);
@@ -211,10 +220,8 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
  * @param  lParam Message parameter.
  * @return        0 if everything worked.
  */
-LRESULT DoCreateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					 LPARAM lParam) {
-	const char *msg;
-
+LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
+					  LPARAM lParam) {
 	// Create CommandBar and add exit button.
 	HWND hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
@@ -232,8 +239,8 @@ LRESULT DoCreateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
  * @param  lParam Message parameter.
  * @return        0 if everything worked.
  */
-LRESULT DoHibernateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-						LPARAM lParam) {
+LRESULT WndMainHibernate(HWND hWnd, UINT wMsg, WPARAM wParam,
+						 LPARAM lParam) {
 	// If we are not the active window, then free the CommandBar to
 	// save memory.
 	if (GetActiveWindow() != hWnd) {
@@ -253,8 +260,8 @@ LRESULT DoHibernateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
  * @param  lParam Message parameter.
  * @return        0 if everything worked.
  */
-LRESULT DoActivateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					   LPARAM lParam) {
+LRESULT WndMainActivate(HWND hWnd, UINT wMsg, WPARAM wParam,
+						LPARAM lParam) {
 	// If we are activating and there's no CommandBar, then create it.
 	if ((LOWORD(wParam) != WA_INACTIVE) &&
 		(GetDlgItem(hWnd, IDC_CMDBAR) == 0)) {
@@ -266,6 +273,22 @@ LRESULT DoActivateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
 	return 0;
 }
 
+/**
+ * Process the WM_CLOSE message for the window.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
+					 LPARAM lParam) {
+	// Send window destruction message.
+	DestroyWindow(hWnd);
+
+	return 0;
+}
 
 /**
  * Process the WM_DESTROY message for the window.
@@ -276,8 +299,12 @@ LRESULT DoActivateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
  * @param  lParam Message parameter.
  * @return        0 if everything worked.
  */
-LRESULT DoDestroyMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					  LPARAM lParam) {
+LRESULT WndMainDestroy(HWND hWnd, UINT wMsg, WPARAM wParam,
+					   LPARAM lParam) {
+	// Clean up.
+	uki_clean();
+
+	// Post quit message and return.
 	PostQuitMessage(0);
 	return 0;
 }

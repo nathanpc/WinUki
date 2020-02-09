@@ -27,15 +27,15 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 								LPARAM lParam);
 
 // Message handlers.
-LRESULT DoCreateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					 LPARAM lParam);
-LRESULT DoPaintMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					LPARAM lParam);
-LRESULT DoHibernateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-						LPARAM lParam);
-LRESULT DoActivateMain(HWND hWnd, UINT wMsg, WPARAM wParam,
-					   LPARAM lParam);
-LRESULT DoDestroyMain(HWND hWnd, UINT wMsg, WPARAM wParam,
+LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 					  LPARAM lParam);
+LRESULT WndMainHibernate(HWND hWnd, UINT wMsg, WPARAM wParam,
+						 LPARAM lParam);
+LRESULT WndMainActivate(HWND hWnd, UINT wMsg, WPARAM wParam,
+						LPARAM lParam);
+LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
+					 LPARAM lParam);
+LRESULT WndMainDestroy(HWND hWnd, UINT wMsg, WPARAM wParam,
+					   LPARAM lParam);
 
 #endif  // _WINUKICE_H
