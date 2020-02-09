@@ -8,6 +8,7 @@
 #ifndef _WINUKICE_H
 #define _WINUKICE_H
 
+#include "resource.h"
 #include "uki.h"
 
 // Control IDs.

@@ -117,7 +117,7 @@ int InitializeApplication(HINSTANCE hInstance) {
 	wc.cbClsExtra = 0;				  // Extra class data.
 	wc.cbWndExtra = 0;				  // Extra window data.
 	wc.hInstance = hInstance;		  // Owner handle.
-	wc.hIcon = NULL;				  // Application icon.
+	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPICON));
 	wc.hCursor = NULL;				  // Default cursor. (Always NULL)
 	wc.hbrBackground = (HBRUSH)GetSysColorBrush(COLOR_STATIC);
 	wc.lpszMenuName = NULL;           // Menu name. (Always NULL)
