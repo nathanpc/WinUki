@@ -9,6 +9,7 @@
 #include <commctrl.h>
 #include "WinUkiCE.h"
 #include "Utilities.h"
+#include "ImgListManager.h"
 
 // Global variables.
 LPCTSTR szAppName = L"WinUki";
@@ -222,8 +223,16 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
  */
 LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 					  LPARAM lParam) {
+	HWND hwndCB;
+
+	// Ensure that the common control DLL is loaded. 
+    InitCommonControls();
+
+	// Initialize the Image List.
+	InitializeImageList(hInst);
+
 	// Create CommandBar and add exit button.
-	HWND hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
+	hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
 	// Initialize Uki.
