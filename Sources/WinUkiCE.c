@@ -121,36 +121,36 @@ LRESULT PopulateTreeView() {
 	// Add article library root item.
 	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiArticles = TreeViewAddItem((HTREEITEM)NULL, szCaption,
-		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDI_LIBRARY));
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
 
 	// Add template library root item.
 	LoadString(hInst, IDS_TEMPLATE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiTemplates = TreeViewAddItem((HTREEITEM)NULL, szCaption,
-		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDI_TEMPLATELIBRARY));
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY));
 
 	htiLastItem = TreeViewAddItem(htiArticles, L"Test 1", (HTREEITEM)NULL,
-		ImageListIconIndex(IDI_ARTICLE));
+		ImageListIconIndex(IDB_ARTICLE));
 	htiLastItem = TreeViewAddItem(htiArticles, L"Test 2", htiLastItem,
-		ImageListIconIndex(IDI_ARTICLE));
+		ImageListIconIndex(IDB_ARTICLE));
 	htiLastItem = TreeViewAddItem(htiArticles, L"Test 3", htiLastItem,
-		ImageListIconIndex(IDI_ARTICLE));
+		ImageListIconIndex(IDB_ARTICLE));
 	htiLastItem = TreeViewAddItem(htiArticles, L"Test 4", htiLastItem,
-		ImageListIconIndex(IDI_ARTICLE));
+		ImageListIconIndex(IDB_ARTICLE));
 	htiLastItem = TreeViewAddItem(htiArticles, L"Test 5", htiLastItem,
-		ImageListIconIndex(IDI_ARTICLE));
+		ImageListIconIndex(IDB_ARTICLE));
 
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", (HTREEITEM)NULL,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 12", htiLastItem,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 13", htiLastItem,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 14", htiLastItem,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 15", htiLastItem,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 16", htiLastItem,
-		ImageListIconIndex(IDI_TEMPLATE));
+		ImageListIconIndex(IDB_TEMPLATE));
 
 	return 0;
 }

@@ -19,9 +19,9 @@
 // Global variables.
 HIMAGELIST hIml;
 int icnList[NUM_ICONS];
-int resList[NUM_ICONS] = { IDI_ARTICLE, IDI_BOOK, IDI_BOOKOPEN,
-						   IDI_FOLDER, IDI_FOLDEROPEN, IDI_LIBRARY,
-						   IDI_TEMPLATE, IDI_TEMPLATELIBRARY };
+int resList[NUM_ICONS] = { IDB_ARTICLE, IDB_BOOK, IDB_BOOKOPEN,
+						   IDB_FOLDER, IDB_FOLDEROPEN, IDB_LIBRARY,
+						   IDB_TEMPLATE, IDB_TEMPLATELIBRARY };
 
 // Private methods.
 void PopulateImageList(HINSTANCE hInst);
@@ -70,12 +70,12 @@ int ImageListIconIndex(int iResourceID) {
  * @param hInst Application instance handle.
  */
 void PopulateImageList(HINSTANCE hInst) {
-	HICON hIcon;
+	HBITMAP hBmp;
 	int i;
 	
 	// Go through the resources adding them to the list.
 	for (i = 0; i < NUM_ICONS; i++) {
-		hIcon = LoadIcon(hInst, MAKEINTRESOURCE(resList[i])); 
-		icnList[i] = ImageList_AddIcon(hIml, hIcon); 
+		hBmp = LoadBitmap(hInst, MAKEINTRESOURCE(resList[i])); 
+		icnList[i] = ImageList_Add(hIml, hBmp, NULL); 
 	}
 }

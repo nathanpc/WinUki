@@ -55,14 +55,20 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_APPICON             ICON    DISCARDABLE     "AppIcon.ico"
-IDI_ARTICLE             ICON    DISCARDABLE     "Article.ico"
-IDI_BOOK                ICON    DISCARDABLE     "Book.ico"
-IDI_BOOKOPEN            ICON    DISCARDABLE     "BookOpen.ico"
-IDI_TEMPLATELIBRARY     ICON    DISCARDABLE     "TemplateLibrary.ico"
-IDI_FOLDER              ICON    DISCARDABLE     "Folder.ico"
-IDI_FOLDEROPEN          ICON    DISCARDABLE     "FolderOpen.ico"
-IDI_LIBRARY             ICON    DISCARDABLE     "Library.ico"
-IDI_TEMPLATE            ICON    DISCARDABLE     "Template.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_TEMPLATELIBRARY     BITMAP  DISCARDABLE     "TemplateLibrary.bmp"
+IDB_ARTICLE             BITMAP  DISCARDABLE     "Article.bmp"
+IDB_BOOK                BITMAP  DISCARDABLE     "Book.bmp"
+IDB_BOOKOPEN            BITMAP  DISCARDABLE     "BookOpen.bmp"
+IDB_FOLDER              BITMAP  DISCARDABLE     "Folder.bmp"
+IDB_FOLDEROPEN          BITMAP  DISCARDABLE     "FolderOpen.bmp"
+IDB_LIBRARY             BITMAP  DISCARDABLE     "Library.bmp"
+IDB_TEMPLATE            BITMAP  DISCARDABLE     "Template.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
