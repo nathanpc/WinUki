@@ -10,6 +10,10 @@
 #include "WinUkiCE.h"
 #include "Utilities.h"
 #include "ImgListManager.h"
+#include "TreeViewManager.h"
+
+// Definitions.
+#define LBL_MAX_LEN 100
 
 // Global variables.
 LPCTSTR szAppName = L"WinUki";
@@ -100,6 +104,54 @@ int InitializeUki() {
 
 	// Print the page content.
 	PrintDebugConsole("%s\n", content);
+	return 0;
+}
+
+/**
+ * Populates the TreeView component with stuff.
+ *
+ * @return 0 if everything went OK.
+ */
+LRESULT PopulateTreeView() {
+	HTREEITEM htiArticles;
+	HTREEITEM htiTemplates;
+	HTREEITEM htiLastItem;
+	WCHAR szCaption[LBL_MAX_LEN];
+
+	// Add article library root item.
+	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
+	htiArticles = TreeViewAddItem((HTREEITEM)NULL, szCaption,
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDI_LIBRARY));
+
+	// Add template library root item.
+	LoadString(hInst, IDS_TEMPLATE_LIBRARY, szCaption, LBL_MAX_LEN);
+	htiTemplates = TreeViewAddItem((HTREEITEM)NULL, szCaption,
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDI_TEMPLATELIBRARY));
+
+	htiLastItem = TreeViewAddItem(htiArticles, L"Test 1", (HTREEITEM)NULL,
+		ImageListIconIndex(IDI_ARTICLE));
+	htiLastItem = TreeViewAddItem(htiArticles, L"Test 2", htiLastItem,
+		ImageListIconIndex(IDI_ARTICLE));
+	htiLastItem = TreeViewAddItem(htiArticles, L"Test 3", htiLastItem,
+		ImageListIconIndex(IDI_ARTICLE));
+	htiLastItem = TreeViewAddItem(htiArticles, L"Test 4", htiLastItem,
+		ImageListIconIndex(IDI_ARTICLE));
+	htiLastItem = TreeViewAddItem(htiArticles, L"Test 5", htiLastItem,
+		ImageListIconIndex(IDI_ARTICLE));
+
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", (HTREEITEM)NULL,
+		ImageListIconIndex(IDI_TEMPLATE));
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 12", htiLastItem,
+		ImageListIconIndex(IDI_TEMPLATE));
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 13", htiLastItem,
+		ImageListIconIndex(IDI_TEMPLATE));
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 14", htiLastItem,
+		ImageListIconIndex(IDI_TEMPLATE));
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 15", htiLastItem,
+		ImageListIconIndex(IDI_TEMPLATE));
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 16", htiLastItem,
+		ImageListIconIndex(IDI_TEMPLATE));
+
 	return 0;
 }
 
@@ -224,19 +276,32 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 					  LPARAM lParam) {
 	HWND hwndCB;
+	HWND hwndTV;
+	HIMAGELIST hIml;
+	RECT rcTreeView;
 
 	// Ensure that the common control DLL is loaded. 
     InitCommonControls();
 
 	// Initialize the Image List.
-	InitializeImageList(hInst);
+	hIml = InitializeImageList(hInst);
 
 	// Create CommandBar and add exit button.
 	hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
+	// Calculate the TreeView control size and position.
+	GetClientRect(hWnd, &rcTreeView);
+	rcTreeView.top += CommandBar_Height(hwndCB);
+
+	// Create the TreeView control.
+	hwndTV = InitializeTreeView(hInst, hWnd, rcTreeView,
+		(HMENU)IDC_TREEVIEW, hIml);
+	PopulateTreeView();
+
 	// Initialize Uki.
-	return InitializeUki();
+	//return InitializeUki();
+	return 0;
 }
 
 /**

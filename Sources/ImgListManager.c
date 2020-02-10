@@ -29,14 +29,14 @@ void PopulateImageList(HINSTANCE hInst);
 /**
  * Initializes the ImageList component and populates it.
  *
- * @param  hInst Application instance handler.
- * @return       ImageList handler.
+ * @param  hInst Application instance handle.
+ * @return       ImageList handle.
  */
 HIMAGELIST InitializeImageList(HINSTANCE hInst) {
     // Ensure that the common control DLL is loaded. 
     InitCommonControls(); 
 	
-    // Create a masked image list large enough to hold the icons. 
+    // Create a ImageList large enough to hold the icons. 
     hIml = ImageList_Create(CX_ICON, CY_ICON, 0, NUM_ICONS, 0); 
 	
 	// Load icons into the ImageList and populate the indexing array.
@@ -48,15 +48,15 @@ HIMAGELIST InitializeImageList(HINSTANCE hInst) {
 /**
  * Gets a ImageList index value related to a icon resource ID.
  *
- * @param  nResourceID Icon resource ID.
+ * @param  iResourceID Icon resource ID.
  * @return             ImageList index value if found. -1 otherwise.
  */
-int ImageListIconIndex(int nResourceID) {
+int ImageListIconIndex(int iResourceID) {
 	int i;
 
 	// Go through the array trying to find a match.
 	for (i = 0; i < NUM_ICONS; i++) {
-		if (resList[i] == nResourceID) {
+		if (resList[i] == iResourceID) {
 			return icnList[i];
 		}
 	}
@@ -67,7 +67,7 @@ int ImageListIconIndex(int nResourceID) {
 /**
  * Populates the ImageList.
  *
- * @param hInst Application instance handler.
+ * @param hInst Application instance handle.
  */
 void PopulateImageList(HINSTANCE hInst) {
 	HICON hIcon;

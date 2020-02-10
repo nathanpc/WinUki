@@ -12,7 +12,8 @@
 #include "uki.h"
 
 // Control IDs.
-#define IDC_CMDBAR 1
+#define IDC_CMDBAR   201
+#define IDC_TREEVIEW 202
 
 
 // Uki stuff.
@@ -22,6 +23,9 @@ int InitializeUki();
 int InitializeApplication(HINSTANCE hInstance);
 HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 int TerminateInstance(HINSTANCE hInstance, int nDefRC);
+
+// Control managers.
+LRESULT PopulateTreeView();
 
 // Window procedure.
 LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,

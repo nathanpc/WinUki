@@ -13,6 +13,6 @@
 #include "resource.h"
 
 HIMAGELIST InitializeImageList(HINSTANCE hInst);
-int ImageListIconIndex(int nResourceID);
+int ImageListIconIndex(int iResourceID);
 
 #endif  // _IMGLISTMANAGER_H

@@ -63,6 +63,18 @@ IDI_FOLDER              ICON    DISCARDABLE     "Folder.ico"
 IDI_FOLDEROPEN          ICON    DISCARDABLE     "FolderOpen.ico"
 IDI_LIBRARY             ICON    DISCARDABLE     "Library.ico"
 IDI_TEMPLATE            ICON    DISCARDABLE     "Template.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ARTICLE_LIBRARY     "Articles"
+    IDS_TEMPLATE_LIBRARY    "Templates"
+END
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

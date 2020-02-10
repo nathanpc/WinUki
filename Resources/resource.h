@@ -2,6 +2,8 @@
 // Microsoft Developer Studio generated include file.
 // Used by resources.rc
 //
+#define IDS_ARTICLE_LIBRARY             1
+#define IDS_TEMPLATE_LIBRARY            2
 #define IDI_APPICON                     101
 #define IDI_ARTICLE                     104
 #define IDI_BOOK                        105
