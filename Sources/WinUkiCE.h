@@ -17,7 +17,7 @@
 
 
 // Uki stuff.
-int InitializeUki();
+int InitializeUki(const char *szWikiPath);
 
 // Instance operators.
 int InitializeApplication(HINSTANCE hInstance);

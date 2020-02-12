@@ -71,3 +71,13 @@ HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
 	return hItem;
 }
 
+/**
+ * Expands a node in the TreeView.
+ *
+ * @param  hNode Handle to the node to expand.
+ * @param        TRUE if the operation was successful.
+ */
+BOOL TreeViewExpandNode(HTREEITEM hNode) {
+	return TreeView_Expand(hwndTreeView, hNode, TVE_EXPAND);
+}
+

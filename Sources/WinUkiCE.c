@@ -59,14 +59,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 /**
  * Initializes the Uki environment.
+ *
+ * @param  szWikiPath Path to the uki wiki root.
+ * @return            FALSE if everything went fine.
  */
-int InitializeUki() {
+int InitializeUki(const char *szWikiPath) {
 	uki_variable_t var;
+	uki_article_t article;
+	size_t ia = 0;
 	uint8_t iv = 0;
 	char *content;
 
 	// Initialize the uki wiki.
-	if ((uki_error = uki_initialize(wipath)) != UKI_OK) {
+	if ((uki_error = uki_initialize(szWikiPath)) != UKI_OK) {
 		PrintDebugConsole(uki_error_msg(uki_error));
 		uki_clean();
 
@@ -74,25 +79,35 @@ int InitializeUki() {
 	}
 
 	// Print configurations.
-	printf("Configurations:\n");
+	PrintDebugConsole("Configurations:\r\n");
 	var = uki_config(iv);
 	while (var.key != NULL) {
-		PrintDebugConsole("   %s <- %s\n", var.key, var.value);
+		PrintDebugConsole("   %s <- %s\r\n", var.key, var.value);
 		iv++;
 		var = uki_config(iv);
 	}
-	printf("\n");
+	PrintDebugConsole("\r\n");
 
 	// Print variables.
-	printf("Variables:\n");
+	PrintDebugConsole("Variables:\r\n");
 	iv = 0;
 	var = uki_variable(iv);
 	while (var.key != NULL) {
-		PrintDebugConsole("   %s <- %s\n", var.key, var.value);
+		PrintDebugConsole("   %s <- %s\r\n", var.key, var.value);
 		iv++;
 		var = uki_variable(iv);
 	}
-	printf("\n");
+	PrintDebugConsole("\r\n");
+
+	// Print articles.
+	PrintDebugConsole("Articles:\r\n");
+	article = uki_article(ia);
+	while (article.name != NULL) {
+		PrintDebugConsole("   %s <- %s\r\n", article.path, article.name);
+		ia++;
+		article = uki_article(ia);
+	}
+	PrintDebugConsole("\r\n");
 
 	// Render a page.
 	if ((uki_error = uki_render_page(&content, wipage)) != UKI_OK) {
@@ -103,7 +118,7 @@ int InitializeUki() {
 	}
 
 	// Print the page content.
-	PrintDebugConsole("%s\n", content);
+	PrintDebugConsole("%s\r\n", content);
 	return 0;
 }
 
@@ -115,29 +130,41 @@ int InitializeUki() {
 LRESULT PopulateTreeView() {
 	HTREEITEM htiArticles;
 	HTREEITEM htiTemplates;
+	HTREEITEM htiLastFolder;
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
+	uki_article_t ukiArticle;
+	size_t ia = 0;
 
 	// Add article library root item.
 	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiArticles = TreeViewAddItem((HTREEITEM)NULL, szCaption,
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
 
+	// Populate the articles.
+	ia = 0;
+	ukiArticle = uki_article(ia);
+	while (ukiArticle.name != NULL) {
+		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
+			htiLastItem = TreeViewAddItem(htiArticles, szCaption, (HTREEITEM)NULL,
+				ImageListIconIndex(IDB_ARTICLE));
+		
+			// Go to the next one.
+			ia++;
+			ukiArticle = uki_article(ia);
+		} else {
+			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
+				L"Article Population Failed", MB_OK);
+		}
+	}
+
+	// Expand articles root item.
+	TreeViewExpandNode(htiArticles);
+
 	// Add template library root item.
 	LoadString(hInst, IDS_TEMPLATE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiTemplates = TreeViewAddItem((HTREEITEM)NULL, szCaption,
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY));
-
-	htiLastItem = TreeViewAddItem(htiArticles, L"Test 1", (HTREEITEM)NULL,
-		ImageListIconIndex(IDB_ARTICLE));
-	htiLastItem = TreeViewAddItem(htiArticles, L"Test 2", htiLastItem,
-		ImageListIconIndex(IDB_ARTICLE));
-	htiLastItem = TreeViewAddItem(htiArticles, L"Test 3", htiLastItem,
-		ImageListIconIndex(IDB_ARTICLE));
-	htiLastItem = TreeViewAddItem(htiArticles, L"Test 4", htiLastItem,
-		ImageListIconIndex(IDB_ARTICLE));
-	htiLastItem = TreeViewAddItem(htiArticles, L"Test 5", htiLastItem,
-		ImageListIconIndex(IDB_ARTICLE));
 
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", (HTREEITEM)NULL,
 		ImageListIconIndex(IDB_TEMPLATE));
@@ -151,6 +178,9 @@ LRESULT PopulateTreeView() {
 		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 16", htiLastItem,
 		ImageListIconIndex(IDB_TEMPLATE));
+
+	// Expand templates root item.
+	TreeViewExpandNode(htiTemplates);
 
 	return 0;
 }
@@ -290,6 +320,13 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
+	// Initialize Uki.
+	if (InitializeUki(wipath)) {
+		MessageBox(NULL, L"Failed to initialize Uki", L"Initialization Failure",
+			MB_OK);
+		return 1;
+	}
+
 	// Calculate the TreeView control size and position.
 	GetClientRect(hWnd, &rcTreeView);
 	rcTreeView.top += CommandBar_Height(hwndCB);
@@ -299,8 +336,6 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 		(HMENU)IDC_TREEVIEW, hIml);
 	PopulateTreeView();
 
-	// Initialize Uki.
-	//return InitializeUki();
 	return 0;
 }
 

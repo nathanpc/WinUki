@@ -10,7 +10,11 @@
 
 #include "windowshelper.h"
 
-BOOL ConvertStringAtoW(LPTSTR *szUnicode, const char *szASCII);
+// String conversion.
+BOOL ConvertStringAtoW(LPTSTR szUnicode, const char *szASCII);
+BOOL ConvertStringWtoA(char *szASCII, LPCTSTR szUnicode);
+
+// Debugging.
 void PrintDebugConsole(const char* format, ...);
 
 #endif  // _UTILITIES_H
