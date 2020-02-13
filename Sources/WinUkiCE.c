@@ -148,50 +148,24 @@ int InitializeUki(const char *szWikiPath) {
  */
 size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 						int nDeepness, BOOL bRootNode) {
-	HTREEITEM htiLastFolder;
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
-	uki_article_t ukiLastArticle;
 	uki_article_t ukiArticle;
 	size_t iArticle = iStartArticle;
-	int nCurrentDeep = nDeepness;
 
 	// Initialize state variables.
 	ukiArticle = uki_article(iArticle);
-	ukiLastArticle = ukiArticle;
 	htiLastItem = (HTREEITEM)NULL;
-	htiLastFolder = htiParent;
 
 	// Go through articles.
 	while (ukiArticle.name != NULL) {
 		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
-			// Check if we need to go deeper or lower.
-			if (!strcmp(ukiArticle.parent, ukiLastArticle.parent) ||
-				(bRootNode && (ukiArticle.deepness > nDeepness))) {
-				// We are going into a new folder.
-				if (!ConvertStringAtoW(szCaption, ukiArticle.parent)) {
-					wsprintf(szCaption, L"(Error)");
-				}
-
-				// Add a new folder.
-				htiLastFolder = TreeViewAddItem(htiLastFolder, szCaption,
-					(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
-
-				// Populate said folder.
-				iArticle = PopulateArticles(htiLastFolder, iArticle, nDeepness + 1, FALSE);
-			} else if (ukiArticle.deepness < ukiLastArticle.deepness) {
-				// We are going back to the parent folder.
-				//htiLastFolder = htiParent;
-				goto articlepop_end;
-			} else {
-				// Looks like we just need to add a new article.
-				htiLastItem = TreeViewAddItem(htiLastFolder, szCaption,
-					htiLastItem, ImageListIconIndex(IDB_ARTICLE));
-			}
+			htiLastItem = TreeViewAddItem(htiParent, szCaption,
+				htiLastItem, ImageListIconIndex(IDB_ARTICLE),
+				(LPARAM)ukiArticle.path);
 		
 			// Go to the next one.
 			iArticle++;
-			ukiLastArticle = ukiArticle;
 			ukiArticle = uki_article(iArticle);
 		} else {
 			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
@@ -199,8 +173,46 @@ size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 		}
 	}
 
-articlepop_end:
 	return iArticle - 1;
+}
+
+/**
+ * Populates the Templates node in the TreeView.
+ *
+ * @param  htiParent      Parent TreeView node handle.
+ * @param  iStartTemplate Starting template index.
+ * @param  nDeepness      Current deepness level.
+ * @param  bRootNode      Is this the root Template node?
+ * @return                Last template index processed.
+ */
+size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
+						 int nDeepness, BOOL bRootNode) {
+	HTREEITEM htiLastItem;
+	WCHAR szCaption[LBL_MAX_LEN];
+	uki_template_t ukiTemplate;
+	size_t iTemplate = iStartTemplate;
+
+	// Initialize state variables.
+	ukiTemplate = uki_template(iTemplate);
+	htiLastItem = (HTREEITEM)NULL;
+
+	// Go through templates.
+	while (ukiTemplate.name != NULL) {
+		if (ConvertStringAtoW(szCaption, ukiTemplate.name)) {
+			htiLastItem = TreeViewAddItem(htiParent, szCaption,
+				htiLastItem, ImageListIconIndex(IDB_TEMPLATE),
+				(LPARAM)ukiTemplate.path);
+		
+			// Go to the next one.
+			iTemplate++;
+			ukiTemplate = uki_template(iTemplate);
+		} else {
+			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
+				L"Template Population Failed", MB_OK);
+		}
+	}
+
+	return iTemplate - 1;
 }
 
 /**
@@ -211,40 +223,27 @@ articlepop_end:
 LRESULT PopulateTreeView() {
 	HTREEITEM htiArticles;
 	HTREEITEM htiTemplates;
-	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
 
 	// Add article library root item.
 	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiArticles = TreeViewAddItem((HTREEITEM)NULL, szCaption,
-		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY), (LPARAM)0);
 
 	// Populate the articles.
 	PopulateArticles(htiArticles, 0, 0, TRUE);
 
-	// Expand articles root item.
-	TreeViewExpandNode(htiArticles);
-
 	// Add template library root item.
 	LoadString(hInst, IDS_TEMPLATE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiTemplates = TreeViewAddItem((HTREEITEM)NULL, szCaption,
-		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY));
+		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY), (LPARAM)0);
 
-	htiLastItem = (HTREEITEM)NULL;
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 12", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 13", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 14", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 15", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 16", htiLastItem,
-		ImageListIconIndex(IDB_TEMPLATE));
+	// Populate the templates.
+	PopulateTemplates(htiTemplates, 0, 0, TRUE);
 
-	// Expand templates root item.
+
+	// Expand the view.
+	TreeViewExpandNode(htiArticles);
 	TreeViewExpandNode(htiTemplates);
 
 	return 0;
@@ -350,6 +349,8 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 //		return WndMainHibernate(hWnd, wMsg, wParam, lParam);
 //	case WM_ACTIVATE:
 //		return WndMainActivate(hWnd, wMsg, wParam, lParam);
+	case WM_NOTIFY:
+		return WndMainNotify(hWnd, wMsg, wParam, lParam);
 	case WM_CLOSE:
 		return WndMainClose(hWnd, wMsg, wParam, lParam);
 	case WM_DESTROY:
@@ -357,6 +358,45 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 	}
 
 	return DefWindowProc(hWnd, wMsg, wParam, lParam);
+}
+
+/**
+ * Process the TVN_SELCHANGED message for the TreeView.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
+								 LPARAM lParam) {
+	TVITEM tvItem;
+	WCHAR szCaption[LBL_MAX_LEN];
+	char *szPath;
+	NMTREEVIEW* pnmTreeView = (LPNMTREEVIEW)lParam;
+
+	// Get item information.
+	tvItem.hItem = pnmTreeView->itemNew.hItem;
+	tvItem.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE;
+	tvItem.pszText = szCaption;
+	tvItem.cchTextMax = LBL_MAX_LEN;
+	TreeViewGetItem(&tvItem);
+
+	// Check if it was a valid parameter.
+	if (tvItem.lParam != 0) {
+		// Get path from parameter.
+		szPath = (char*)tvItem.lParam;
+
+		// Check if an article or template was selected.
+		if (tvItem.iImage == ImageListIconIndex(IDB_ARTICLE)) {
+			MessageBox(hWnd, szCaption, L"Article Selected", MB_OK);
+		} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
+			MessageBox(hWnd, szCaption, L"Template Selected", MB_OK);
+		}
+	}
+
+	return 0;
 }
 
 /**
@@ -400,6 +440,25 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	hwndTV = InitializeTreeView(hInst, hWnd, rcTreeView,
 		(HMENU)IDC_TREEVIEW, hIml);
 	PopulateTreeView();
+
+	return 0;
+}
+
+/**
+ * Process the WM_NOTIFY message for the window.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT WndMainNotify(HWND hWnd, UINT wMsg, WPARAM wParam,
+					  LPARAM lParam) {
+	switch (((LPNMHDR)lParam)->code) {
+	case TVN_SELCHANGED:
+		return TreeViewSelectionChanged(hWnd, wMsg, wParam, lParam);
+	}
 
 	return 0;
 }

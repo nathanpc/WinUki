@@ -19,7 +19,9 @@ HWND InitializeTreeView(HINSTANCE hInst, HWND hwndParent,
 
 // Operations.
 HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
-						  HTREEITEM hInsAfter, int iImage);
+						  HTREEITEM hInsAfter, int iImage,
+						  LPARAM lParam);
+BOOL TreeViewGetItem(TVITEM *tvItem);
 BOOL TreeViewExpandNode(HTREEITEM hNode);
 
 #endif  // _TREEVIEWMANAGER_H

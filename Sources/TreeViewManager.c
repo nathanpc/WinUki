@@ -44,10 +44,12 @@ HWND InitializeTreeView(HINSTANCE hInst, HWND hwndParent,
  * @param  szText    Item caption.
  * @param  hInsAfter Insert after this TreeView item handle.
  * @param  iImage    Index to the item icon in the ImageList.
+ * @param  lParam    Item lParam.
  * @return           Added item handle.
  */
-HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
-						  HTREEITEM hInsAfter, int iImage) {
+HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPTSTR szText,
+						  HTREEITEM hInsAfter, int iImage,
+						  LPARAM lParam) {
 	HTREEITEM hItem;
 	TV_ITEM tvItem;
 	TV_INSERTSTRUCT tvInsert;
@@ -58,6 +60,7 @@ HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
 	tvItem.cchTextMax = wcslen(szText);
 	tvItem.iImage = iImage;
 	tvItem.iSelectedImage = iImage;
+	tvItem.lParam = lParam;
 	
 	// Fill out the insert structure.
 	tvInsert.item = tvItem;
@@ -69,6 +72,16 @@ HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
 		(LPARAM)(LPTV_INSERTSTRUCT)&tvInsert);
 	
 	return hItem;
+}
+
+/**
+ * Gets a TreeView item.
+ *
+ * @param  tvItem TVITEM structure with the information to get.
+ * @return        TRUE if the operation was successful.
+ */
+BOOL TreeViewGetItem(TVITEM *tvItem) {
+	return TreeView_GetItem(hwndTreeView, tvItem);
 }
 
 /**
