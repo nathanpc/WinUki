@@ -25,6 +25,8 @@ HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 int TerminateInstance(HINSTANCE hInstance, int nDefRC);
 
 // Control managers.
+size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
+						int nDeepness, BOOL bRootNode);
 LRESULT PopulateTreeView();
 
 // Window procedure.

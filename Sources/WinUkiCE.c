@@ -66,6 +66,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 int InitializeUki(const char *szWikiPath) {
 	uki_variable_t var;
 	uki_article_t article;
+	uki_template_t template;
+	size_t it = 0;
 	size_t ia = 0;
 	uint8_t iv = 0;
 	char *content;
@@ -99,11 +101,24 @@ int InitializeUki(const char *szWikiPath) {
 	}
 	PrintDebugConsole("\r\n");
 
+	// Print templates.
+	it = 0;
+	PrintDebugConsole("Templates:\r\n");
+	template = uki_template(it);
+	while (template.name != NULL) {
+		PrintDebugConsole("   %d %s  |  %s <- %s\r\n", template.deepness,
+			template.parent, template.path, template.name);
+		it++;
+		template = uki_template(it);
+	}
+	PrintDebugConsole("\r\n");
+
 	// Print articles.
 	PrintDebugConsole("Articles:\r\n");
 	article = uki_article(ia);
 	while (article.name != NULL) {
-		PrintDebugConsole("   %s <- %s\r\n", article.path, article.name);
+		PrintDebugConsole("   %d %s  |  %s <- %s\r\n", article.deepness,
+			article.parent, article.path, article.name);
 		ia++;
 		article = uki_article(ia);
 	}
@@ -123,6 +138,72 @@ int InitializeUki(const char *szWikiPath) {
 }
 
 /**
+ * Populates the Articles node in the TreeView.
+ *
+ * @param  htiParent     Parent TreeView node handle.
+ * @param  iStartArticle Starting article index.
+ * @param  nDeepness     Current deepness level.
+ * @param  bRootNode     Is this the root Articles node?
+ * @return               Last article index processed.
+ */
+size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
+						int nDeepness, BOOL bRootNode) {
+	HTREEITEM htiLastFolder;
+	HTREEITEM htiLastItem;
+	WCHAR szCaption[LBL_MAX_LEN];
+	uki_article_t ukiLastArticle;
+	uki_article_t ukiArticle;
+	size_t iArticle = iStartArticle;
+	int nCurrentDeep = nDeepness;
+
+	// Initialize state variables.
+	ukiArticle = uki_article(iArticle);
+	ukiLastArticle = ukiArticle;
+	htiLastItem = (HTREEITEM)NULL;
+	htiLastFolder = htiParent;
+
+	// Go through articles.
+	while (ukiArticle.name != NULL) {
+		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
+			// Check if we need to go deeper or lower.
+			if (!strcmp(ukiArticle.parent, ukiLastArticle.parent) ||
+				(bRootNode && (ukiArticle.deepness > nDeepness))) {
+				// We are going into a new folder.
+				if (!ConvertStringAtoW(szCaption, ukiArticle.parent)) {
+					wsprintf(szCaption, L"(Error)");
+				}
+
+				// Add a new folder.
+				htiLastFolder = TreeViewAddItem(htiLastFolder, szCaption,
+					(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
+
+				// Populate said folder.
+				iArticle = PopulateArticles(htiLastFolder, iArticle, nDeepness + 1, FALSE);
+			} else if (ukiArticle.deepness < ukiLastArticle.deepness) {
+				// We are going back to the parent folder.
+				//htiLastFolder = htiParent;
+				goto articlepop_end;
+			} else {
+				// Looks like we just need to add a new article.
+				htiLastItem = TreeViewAddItem(htiLastFolder, szCaption,
+					htiLastItem, ImageListIconIndex(IDB_ARTICLE));
+			}
+		
+			// Go to the next one.
+			iArticle++;
+			ukiLastArticle = ukiArticle;
+			ukiArticle = uki_article(iArticle);
+		} else {
+			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
+				L"Article Population Failed", MB_OK);
+		}
+	}
+
+articlepop_end:
+	return iArticle - 1;
+}
+
+/**
  * Populates the TreeView component with stuff.
  *
  * @return 0 if everything went OK.
@@ -130,11 +211,8 @@ int InitializeUki(const char *szWikiPath) {
 LRESULT PopulateTreeView() {
 	HTREEITEM htiArticles;
 	HTREEITEM htiTemplates;
-	HTREEITEM htiLastFolder;
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
-	uki_article_t ukiArticle;
-	size_t ia = 0;
 
 	// Add article library root item.
 	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
@@ -142,21 +220,7 @@ LRESULT PopulateTreeView() {
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY));
 
 	// Populate the articles.
-	ia = 0;
-	ukiArticle = uki_article(ia);
-	while (ukiArticle.name != NULL) {
-		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
-			htiLastItem = TreeViewAddItem(htiArticles, szCaption, (HTREEITEM)NULL,
-				ImageListIconIndex(IDB_ARTICLE));
-		
-			// Go to the next one.
-			ia++;
-			ukiArticle = uki_article(ia);
-		} else {
-			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
-				L"Article Population Failed", MB_OK);
-		}
-	}
+	PopulateArticles(htiArticles, 0, 0, TRUE);
 
 	// Expand articles root item.
 	TreeViewExpandNode(htiArticles);
@@ -166,7 +230,8 @@ LRESULT PopulateTreeView() {
 	htiTemplates = TreeViewAddItem((HTREEITEM)NULL, szCaption,
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY));
 
-	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", (HTREEITEM)NULL,
+	htiLastItem = (HTREEITEM)NULL;
+	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 11", htiLastItem,
 		ImageListIconIndex(IDB_TEMPLATE));
 	htiLastItem = TreeViewAddItem(htiTemplates, L"Test 12", htiLastItem,
 		ImageListIconIndex(IDB_TEMPLATE));
