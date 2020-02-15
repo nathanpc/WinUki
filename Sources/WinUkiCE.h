@@ -40,6 +40,8 @@ LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 // Window message handlers.
 LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 					  LPARAM lParam);
+LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
+					   LPARAM lParam);
 LRESULT WndMainNotify(HWND hWnd, UINT wMsg, WPARAM wParam,
 					  LPARAM lParam);
 LRESULT WndMainHibernate(HWND hWnd, UINT wMsg, WPARAM wParam,

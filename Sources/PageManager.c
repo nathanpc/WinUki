@@ -9,8 +9,10 @@
 #include "PageManager.h"
 #include "UkiHelper.h"
 #include "Utilities.h"
+#include "resource.h"
 
 // Global variables.
+HINSTANCE hInst;
 LPCTSTR szHTMLControlLibrary = L"htmlview.dll";
 HINSTANCE hinstHTML;
 HWND hwndPageEdit;
@@ -20,20 +22,26 @@ HWND hwndPageView;
 /**
  * Initializes the TreeView component.
  *
- * @param  hInst       Application interface handle.
+ * @param  hParentInst Application interface handle.
  * @param  hwndParent  Parent window handle.
  * @param  rcClient    Client rectagle to place the controls.
  * @param  hPageEditID Page edit control resource ID.
  * @param  hPageViewID Page HTML viewer control resource ID.
  * @return             TRUE if the initialization was successful.
  */
-BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent, RECT rcClient,
+BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 						HMENU hPageEditID, HMENU hPageViewID) {
+	hInst = hParentInst;
+
 	// Create the Edit page view control.
 	hwndPageEdit = CreateWindowEx(0, L"EDIT", NULL,
-		WS_CHILD | WS_BORDER | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL,
+		WS_CHILD | WS_BORDER | WS_VSCROLL | ES_LEFT | ES_MULTILINE |
+		ES_AUTOVSCROLL | ES_NOHIDESEL,
 		rcClient.left, rcClient.top, rcClient.right, rcClient.bottom,
 		hwndParent, hPageEditID, hInst, NULL);
+
+	// Set editor to the max limit.
+	SendMessage(hwndPageEdit, EM_SETLIMITTEXT, 0, 0);
 
 	// Load the HTMLViewer control.
 	InitHTMLControl(hInst);
@@ -51,15 +59,83 @@ BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent, RECT rcClient,
 }
 
 /**
+ * Sends a message to the page editor control.
+ *
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT SendPageEditMessage(UINT wMsg, WPARAM wParam, LPARAM lParam) {
+	return SendMessage(hwndPageEdit, wMsg, wParam, lParam);
+}
+
+/**
+ * Process the WM_COMMAND message for the page editor.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
+							  LPARAM lParam) {
+	switch(HIWORD(wParam)) {
+	case EN_UPDATE:
+		if (SendPageEditMessage(EM_CANUNDO, 0, 0)) {
+			// TODO: FIX THIS.
+			EnableMenuItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
+				IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED);
+		} else {
+			EnableMenuItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
+				IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED | MF_GRAYED);
+		}
+		return 0;
+	default:
+		return DefWindowProc(hWnd, wMsg, wParam, lParam);
+	}
+
+	return 0;
+}
+
+/**
+ * Shows the HTML viewer control.
+ */
+void ShowPageViewer() {
+	HMENU hMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU));
+	hMenu = GetSubMenu(hMenu, 2);
+	CheckMenuItem(hMenu, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND | MF_CHECKED);
+	CheckMenuItem(hMenu, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND | MF_UNCHECKED);
+	//CheckMenuRadioItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
+	//	IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND);
+
+	ShowWindow(hwndPageEdit, SW_HIDE);
+	ShowWindow(hwndPageView, SW_SHOW);
+}
+
+/**
+ * Shows the page editor control.
+ */
+void ShowPageEditor() {
+	HMENU hMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU));
+	hMenu = GetSubMenu(hMenu, 2);
+	CheckMenuItem(hMenu, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND | MF_UNCHECKED);
+	CheckMenuItem(hMenu, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND | MF_CHECKED);
+	//CheckMenuRadioItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
+	//	IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND);
+	ShowWindow(hwndPageView, SW_HIDE);
+	ShowWindow(hwndPageEdit, SW_SHOW);
+}
+
+/**
  * Toggles between the HTML viewer and editor controls.
  */
 void TogglePageView() {
 	if (IsWindowVisible(hwndPageView)) {
-		ShowWindow(hwndPageView, SW_HIDE);
-		ShowWindow(hwndPageEdit, SW_SHOW);
+		ShowPageEditor();
 	} else {
-		ShowWindow(hwndPageEdit, SW_HIDE);
-		ShowWindow(hwndPageView, SW_SHOW);
+		ShowPageViewer();
 	}
 }
 

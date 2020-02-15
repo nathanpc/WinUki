@@ -6,6 +6,7 @@
  */
 
 #include <windows.h>
+#include <windowsx.h>
 #include <commctrl.h>
 #include "WinUkiCE.h"
 #include "Utilities.h"
@@ -20,8 +21,7 @@
 LPCTSTR szAppName = L"WinUki";
 HINSTANCE hInst;
 int uki_error;
-LPCTSTR szWikiPath = L"\\testuki";
-const char *wipage = "something";
+LPCTSTR szWikiPath = L"\\TestUki";
 
 /**
  * Application's main entry point.
@@ -258,6 +258,8 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 	switch (wMsg) {
 	case WM_CREATE:
 		return WndMainCreate(hWnd, wMsg, wParam, lParam);
+	case WM_COMMAND:
+		return WndMainCommand(hWnd, wMsg, wParam, lParam);
 //	case WM_HIBERNATE:
 //		return WndMainHibernate(hWnd, wMsg, wParam, lParam);
 //	case WM_ACTIVATE:
@@ -359,6 +361,58 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	InitializePageView(hInst, hWnd, rcPageView, (HMENU)IDC_EDITPAGE,
 		(HMENU)IDC_VIEWPAGE);
 
+	return 0;
+}
+
+/**
+ * Process the WM_COMMAND message for the window.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
+					   LPARAM lParam) {
+	switch (GET_WM_COMMAND_ID(wParam, lParam)) {
+	case IDC_EDITPAGE:
+		// Page Editor.
+		return PageEditHandleCommand(hWnd, wMsg, wParam, lParam);
+	case IDM_FILE_CLOSE:
+		// Close.
+		return SendMessage(hWnd, WM_CLOSE, 0, 0);
+	case IDM_EDIT_UNDO:
+		if (SendPageEditMessage(EM_CANUNDO, 0, 0)) 
+			return SendPageEditMessage(WM_UNDO, 0, 0);
+		break;
+	case IDM_EDIT_CUT:
+		// Cut.
+		return SendPageEditMessage(WM_CUT, 0, 0);
+	case IDM_EDIT_COPY:
+		// Copy.
+		return SendPageEditMessage(WM_COPY, 0, 0);
+	case IDM_EDIT_PASTE:
+		// Paste.
+		return SendPageEditMessage(WM_PASTE, 0, 0);
+	case IDM_EDIT_CLEAR:
+		// Clear.
+		return SendPageEditMessage(WM_CLEAR, 0, 0);
+	case IDM_EDIT_SELECTALL:
+		// Select All.
+		return SendPageEditMessage(EM_SETSEL, 0, -1);
+		break;
+	case IDM_VIEW_PAGEVIEW:
+		// Show Page Viwer.
+		ShowPageViewer();
+		break;
+	case IDM_VIEW_PAGEEDIT:
+		// Show Page Editor.
+		ShowPageEditor();
+		break;
+	default:
+		return DefWindowProc(hWnd, wMsg, wParam, lParam);
+	}
 	return 0;
 }
 

@@ -11,14 +11,21 @@
 #include <windows.h>
 
 // Initialization.
-BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent, RECT rcClient,
+BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 						HMENU hPageEditID, HMENU hPageViewID);
+
+// Messaging.
+LRESULT SendPageEditMessage(UINT wMsg, WPARAM wParam, LPARAM lParam);
+LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
+							  LPARAM lParam);
 
 // Population.
 BOOL PopulatePageViewArticle(const size_t nIndex);
 BOOL PopulatePageViewTemplate(const size_t nIndex);
 
 // Visibility.
+void ShowPageViewer();
+void ShowPageEditor();
 void TogglePageView();
 
 #endif  // _PAGEMANAGER_H
