@@ -80,7 +80,7 @@ size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
 			htiLastItem = TreeViewAddItem(htiParent, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_ARTICLE),
-				(LPARAM)ukiArticle.path);
+				(LPARAM)iArticle);
 		
 			// Go to the next one.
 			iArticle++;
@@ -115,7 +115,7 @@ size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
 		if (ConvertStringAtoW(szCaption, ukiTemplate.name)) {
 			htiLastItem = TreeViewAddItem(htiParent, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_TEMPLATE),
-				(LPARAM)ukiTemplate.path);
+				(LPARAM)iTemplate);
 		
 			// Go to the next one.
 			iTemplate++;
@@ -285,8 +285,7 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 								 LPARAM lParam) {
 	TVITEM tvItem;
-	WCHAR szCaption[LBL_MAX_LEN];
-	char *szPath;
+	TCHAR szCaption[LBL_MAX_LEN];
 	NMTREEVIEW* pnmTreeView = (LPNMTREEVIEW)lParam;
 
 	// Get item information.
@@ -298,14 +297,25 @@ LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 
 	// Check if it was a valid parameter.
 	if (tvItem.lParam != 0) {
-		// Get path from parameter.
-		szPath = (char*)tvItem.lParam;
+		size_t nIndex;
+		TCHAR szPath[UKI_MAX_PATH];
+
+		// Get article/template index from parameter.
+		nIndex = (size_t)tvItem.lParam;
 
 		// Check if an article or template was selected.
 		if (tvItem.iImage == ImageListIconIndex(IDB_ARTICLE)) {
-			MessageBox(hWnd, szCaption, L"Article Selected", MB_OK);
+			UKIARTICLE ukiArticle;
+
+			GetUkiArticle(&ukiArticle, nIndex);
+			GetUkiArticlePath(szPath, ukiArticle);
+			MessageBox(hWnd, szPath, L"Article Selected", MB_OK);
 		} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
-			MessageBox(hWnd, szCaption, L"Template Selected", MB_OK);
+			UKITEMPLATE ukiTemplate;
+
+			GetUkiTemplate(&ukiTemplate, nIndex);
+			GetUkiTemplatePath(szPath, ukiTemplate);
+			MessageBox(hWnd, szPath, L"Template Selected", MB_OK);
 		}
 	}
 
@@ -340,11 +350,7 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
 	// Initialize Uki.
-	if (!InitializeUki(szWikiPath)) {
-		MessageBox(NULL, L"Failed to initialize Uki engine.", L"Initialization Failure",
-			MB_OK | MB_ICONERROR);
-		return 1;
-	}
+	InitializeUki(szWikiPath);
 
 	// Calculate the TreeView control size and position.
 	GetClientRect(hWnd, &rcTreeView);

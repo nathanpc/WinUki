@@ -37,6 +37,58 @@ BOOL InitializeUki(LPCTSTR szWikiPath) {
 }
 
 /**
+ * Grabs an article path.
+ *
+ * @param  szArticlePath Pre-allocated buffer to receive the file path.
+ * @param  ukiArticle    Uki article structure.
+ * @return               TRUE if the operation was successful.
+ */
+BOOL GetUkiArticlePath(LPTSTR szArticlePath, const UKIARTICLE ukiArticle) {
+	char szaPath[UKI_MAX_PATH];
+	int err;
+
+	// Get the file path.
+	if ((err = uki_article_fpath(szaPath, ukiArticle)) != UKI_OK) {
+		ShowUkiErrorDialog(err);
+		return FALSE;
+	}
+
+	// Convert string to Unicode.
+	if (!ConvertStringAtoW(szArticlePath, szaPath)) {
+		MessageBox(NULL, L"Failed to convert article path from ASCII to Unicode",
+			L"Conversion Error", MB_OK | MB_ICONERROR);
+	}
+
+	return TRUE;
+}
+
+/**
+ * Grabs a template path.
+ *
+ * @param  szTemplatePath Pre-allocated buffer to receive the file path.
+ * @param  ukiTemplate    Uki template structure.
+ * @return                TRUE if the operation was successful.
+ */
+BOOL GetUkiTemplatePath(LPTSTR szTemplatePath, const UKITEMPLATE ukiTemplate) {
+	char szaPath[UKI_MAX_PATH];
+	int err;
+
+	// Get the file path.
+	if ((err = uki_template_fpath(szaPath, ukiTemplate)) != UKI_OK) {
+		ShowUkiErrorDialog(err);
+		return FALSE;
+	}
+
+	// Convert string to Unicode.
+	if (!ConvertStringAtoW(szTemplatePath, szaPath)) {
+		MessageBox(NULL, L"Failed to convert template path from ASCII to Unicode",
+			L"Conversion Error", MB_OK | MB_ICONERROR);
+	}
+
+	return TRUE;
+}
+
+/**
  * Grabs a Uki article by its index.
  *
  * @param  ukiArticle Pointer to a Uki article structure to be populated.

@@ -22,9 +22,11 @@ void ShowUkiErrorDialog(int nErrorCode);
 void CloseUki();
 BOOL InitializeUki(LPCTSTR szWikiPath);
 
-// Operations.
+// Lookup.
 BOOL GetUkiTemplate(UKITEMPLATE *ukiTemplate, size_t nIndex);
 BOOL GetUkiArticle(UKIARTICLE *ukiArticle, size_t nIndex);
+BOOL GetUkiArticlePath(LPTSTR szArticlePath, const UKIARTICLE ukiArticle);
+BOOL GetUkiTemplatePath(LPTSTR szTemplatePath, const UKITEMPLATE ukiTemplate);
 
 // Debugging.
 int TestInitializeUki(const char *szaWikiPath, const char *szaWikiPage);
