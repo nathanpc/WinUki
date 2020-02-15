@@ -14,4 +14,8 @@
 BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent,
 						RECT rcClient, HMENU hPageEditID);
 
+// Population.
+BOOL PopulatePageViewArticle(const size_t nIndex);
+BOOL PopulatePageViewTemplate(const size_t nIndex);
+
 #endif  // _PAGEMANAGER_H
