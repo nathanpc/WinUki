@@ -285,38 +285,31 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 								 LPARAM lParam) {
 	TVITEM tvItem;
-	TCHAR szCaption[LBL_MAX_LEN];
 	NMTREEVIEW* pnmTreeView = (LPNMTREEVIEW)lParam;
+	size_t nIndex;
+	TCHAR szPath[UKI_MAX_PATH];
 
 	// Get item information.
 	tvItem.hItem = pnmTreeView->itemNew.hItem;
-	tvItem.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE;
-	tvItem.pszText = szCaption;
-	tvItem.cchTextMax = LBL_MAX_LEN;
+	tvItem.mask = TVIF_PARAM | TVIF_IMAGE;
 	TreeViewGetItem(&tvItem);
-
-	// Check if it was a valid parameter.
-	if (tvItem.lParam != 0) {
-		size_t nIndex;
-		TCHAR szPath[UKI_MAX_PATH];
-
-		// Get article/template index from parameter.
-		nIndex = (size_t)tvItem.lParam;
-
-		// Check if an article or template was selected.
-		if (tvItem.iImage == ImageListIconIndex(IDB_ARTICLE)) {
-			UKIARTICLE ukiArticle;
-
-			GetUkiArticle(&ukiArticle, nIndex);
-			GetUkiArticlePath(szPath, ukiArticle);
-			MessageBox(hWnd, szPath, L"Article Selected", MB_OK);
-		} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
-			UKITEMPLATE ukiTemplate;
-
-			GetUkiTemplate(&ukiTemplate, nIndex);
-			GetUkiTemplatePath(szPath, ukiTemplate);
-			MessageBox(hWnd, szPath, L"Template Selected", MB_OK);
-		}
+	
+	// Get article/template index from parameter.
+	nIndex = (size_t)tvItem.lParam;
+	
+	// Check if an article or template was selected.
+	if (tvItem.iImage == ImageListIconIndex(IDB_ARTICLE)) {
+		UKIARTICLE ukiArticle;
+		
+		GetUkiArticle(&ukiArticle, nIndex);
+		GetUkiArticlePath(szPath, ukiArticle);
+		MessageBox(hWnd, szPath, L"Article Selected", MB_OK);
+	} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
+		UKITEMPLATE ukiTemplate;
+		
+		GetUkiTemplate(&ukiTemplate, nIndex);
+		GetUkiTemplatePath(szPath, ukiTemplate);
+		MessageBox(hWnd, szPath, L"Template Selected", MB_OK);
 	}
 
 	return 0;
