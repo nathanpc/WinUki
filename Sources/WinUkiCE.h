@@ -15,6 +15,7 @@
 #define IDC_CMDBAR   201
 #define IDC_TREEVIEW 202
 #define IDC_EDITPAGE 203
+#define IDC_VIEWPAGE 204
 
 // Instance operators.
 int InitializeApplication(HINSTANCE hInstance);

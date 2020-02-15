@@ -355,7 +355,8 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	rcPageView.right -= rcPageView.left;
 
 	// Create the page controls.
-	InitializePageView(hInst, hWnd, rcPageView, (HMENU)IDC_EDITPAGE);
+	InitializePageView(hInst, hWnd, rcPageView, (HMENU)IDC_EDITPAGE,
+		(HMENU)IDC_VIEWPAGE);
 
 	return 0;
 }

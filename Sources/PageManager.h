@@ -11,8 +11,8 @@
 #include <windows.h>
 
 // Initialization.
-BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent,
-						RECT rcClient, HMENU hPageEditID);
+BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent, RECT rcClient,
+						HMENU hPageEditID, HMENU hPageViewID);
 
 // Population.
 BOOL PopulatePageViewArticle(const size_t nIndex);
