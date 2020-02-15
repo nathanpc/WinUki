@@ -288,6 +288,7 @@ LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 	NMTREEVIEW* pnmTreeView = (LPNMTREEVIEW)lParam;
 	size_t nIndex;
 	TCHAR szPath[UKI_MAX_PATH];
+	LPTSTR szFileContents;
 
 	// Get item information.
 	tvItem.hItem = pnmTreeView->itemNew.hItem;
@@ -303,15 +304,20 @@ LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 		
 		GetUkiArticle(&ukiArticle, nIndex);
 		GetUkiArticlePath(szPath, ukiArticle);
-		MessageBox(hWnd, szPath, L"Article Selected", MB_OK);
+		ReadFileContents(szPath, &szFileContents);
+
+		MessageBox(hWnd, szFileContents, L"Article Selected", MB_OK);
 	} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
 		UKITEMPLATE ukiTemplate;
 		
 		GetUkiTemplate(&ukiTemplate, nIndex);
 		GetUkiTemplatePath(szPath, ukiTemplate);
-		MessageBox(hWnd, szPath, L"Template Selected", MB_OK);
+		ReadFileContents(szPath, &szFileContents);
+
+		MessageBox(hWnd, szFileContents, L"Template Selected", MB_OK);
 	}
 
+	LocalFree(szFileContents);
 	return 0;
 }
 

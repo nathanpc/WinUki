@@ -10,6 +10,66 @@
 #include <stdlib.h>
 
 /**
+ * Slurps a file and stores its contents inside a buffer.
+ * @remark Remember to free the contents buffer with LocalFree.
+ *
+ * @param  szPath         Path to the file to be read.
+ * @param  szFileContents File contents buffer. Allocated globally by this
+                          function.
+ * @return                TRUE if the operation was successful.
+ */
+BOOL ReadFileContents(LPCTSTR szPath, LPTSTR *szFileContents) {
+	DWORD dwFileSize;
+	DWORD dwBytesRead;
+	HANDLE hFile;
+	BOOL bStatus = TRUE;
+	char *szaBuffer;
+	
+	// Open the file.
+	hFile = CreateFile(szPath, GENERIC_READ, FILE_SHARE_READ, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		// TODO: Use GetLastError.
+		MessageBox(NULL, L"Couldn't open file to read contents.",
+			L"Read File Error", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+
+	// Get file size to use to read the whole thing in one go.
+	dwFileSize = GetFileSize(hFile, NULL);
+	
+	// Allocate the memory for the file contents.
+	*szFileContents = (LPTSTR)LocalAlloc(LMEM_FIXED, (dwFileSize + 1) *
+		sizeof(TCHAR));
+	szaBuffer = (char*)LocalAlloc(LMEM_FIXED, (dwFileSize + 1) * sizeof(char));
+	
+	// Read the file into the buffer.
+	if (!ReadFile(hFile, szaBuffer, dwFileSize, &dwBytesRead,
+		NULL)) {
+		// TODO: Use GetLastError.
+		MessageBox(NULL, L"Failed to read the contents of the file.",
+			L"Read File Error", MB_OK | MB_ICONERROR);
+		bStatus = FALSE;
+	}
+
+	// Terminate the buffer and convert it.
+	szaBuffer[dwBytesRead] = '\0';
+	if (!ConvertStringAtoW(*szFileContents, szaBuffer)) {
+		MessageBox(NULL, L"Failed to convert file buffer from ASCII to Unicode",
+			L"Conversion Failed", MB_OK | MB_ICONERROR);
+
+		LocalFree(*szFileContents);
+		bStatus = FALSE;
+	}
+    
+	// Clean up.
+	CloseHandle(hFile);
+	LocalFree(szaBuffer);
+
+	return bStatus;
+}
+
+/**
  * Converts a regular ASCII string into a Unicode string.
  *
  * @param  szUnicode Pre-allocated Unicode string.
@@ -62,7 +122,7 @@ void PrintDebugConsole(const char* format, ...) {
 	va_end(argptr);
 
 	// Convert string to Unicode.
-	if (!ConvertStringAtoW(&szMsg, buffer)) {
+	if (!ConvertStringAtoW(szMsg, buffer)) {
 		OutputDebugString(L"Error while converting string to unicode.\r\n");
 		return;
 	}
