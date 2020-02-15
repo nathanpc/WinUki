@@ -425,7 +425,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /windowsce:emulation /MACHINE:IX86
-# ADD LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) LibUki.lib /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /libpath:"Z:\Projects\libuki\X86EMDbg" /windowsce:emulation /MACHINE:IX86
+# ADD LINK32 commctrl.lib coredll.lib $(CEx86Corelibc) LibUki.lib htmlview.lib /nologo /stack:0x10000,0x1000 /subsystem:windows /debug /nodefaultlib:"OLDNAMES.lib" /nodefaultlib:$(CENoDefaultLib) /libpath:"Z:\Projects\libuki\X86EMDbg" /windowsce:emulation /MACHINE:IX86
 
 !ENDIF 
 
@@ -631,7 +631,16 @@ DEP_CPP_PAGEM=\
 !ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
 
 DEP_CPP_PAGEM=\
+	"..\..\Projects\libuki\src\article.h"\
+	"..\..\Projects\libuki\src\config.h"\
+	"..\..\Projects\libuki\src\constants.h"\
+	"..\..\Projects\libuki\src\template.h"\
+	"..\..\Projects\libuki\src\uki.h"\
+	"..\..\Projects\libuki\src\windowshelper.h"\
 	".\Sources\PageManager.h"\
+	".\Sources\UkiHelper.h"\
+	".\Sources\Utilities.h"\
+	{$(INCLUDE)}"htmlctrl.h"\
 	
 
 !ENDIF 
@@ -862,6 +871,7 @@ DEP_CPP_UKIHE=\
 	"..\..\Projects\libuki\src\uki.h"\
 	"..\..\Projects\libuki\src\windowshelper.h"\
 	".\Sources\UkiHelper.h"\
+	".\Sources\Utilities.h"\
 	
 
 !ENDIF 
@@ -1117,6 +1127,7 @@ DEP_CPP_WINUK=\
 	".\Sources\ImgListManager.h"\
 	".\Sources\PageManager.h"\
 	".\Sources\TreeViewManager.h"\
+	".\Sources\UkiHelper.h"\
 	".\Sources\Utilities.h"\
 	".\Sources\WinUkiCE.h"\
 	

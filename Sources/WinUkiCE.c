@@ -331,6 +331,7 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 
 	// Create CommandBar and add exit button.
 	hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
+	CommandBar_InsertMenubar(hwndCB, hInst, IDR_MAINMENU, 0);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
 	// Initialize Uki.

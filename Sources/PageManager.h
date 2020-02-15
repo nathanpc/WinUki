@@ -18,4 +18,7 @@ BOOL InitializePageView(HINSTANCE hInst, HWND hwndParent, RECT rcClient,
 BOOL PopulatePageViewArticle(const size_t nIndex);
 BOOL PopulatePageViewTemplate(const size_t nIndex);
 
+// Visibility.
+void TogglePageView();
+
 #endif  // _PAGEMANAGER_H

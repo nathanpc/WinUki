@@ -72,6 +72,59 @@ IDB_TEMPLATE            BITMAP  DISCARDABLE     "Template.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        POPUP "&New"
+        BEGIN
+            MENUITEM "&Article",                    IDM_FILE_ARTICLE
+            MENUITEM "&Template",                   IDM_FILE_TEMPLATE
+        END
+        MENUITEM "&Open Workspace...",          IDM_FILE_OPENWS
+        MENUITEM SEPARATOR
+        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "Save As...",                  IDM_FILE_SAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "&Close",                      IDM_FILE_CLOSE
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo",                       IDM_EDIT_UNDO
+        MENUITEM "&Redo",                       IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        IDM_EDIT_CUT
+        MENUITEM "&Copy",                       IDM_EDIT_COPY
+        MENUITEM "&Paste",                      IDM_EDIT_PASTE
+        MENUITEM "Select A&ll",                 IDM_EDIT_SELECTALL
+        MENUITEM SEPARATOR
+        MENUITEM "&Find...",                    IDM_EDIT_FIND
+        MENUITEM "Find &Next",                  IDM_EDIT_FINDNEXT
+        MENUITEM "&Replace...",                 IDM_EDIT_REPLACE
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Page &View",                  IDM_VIEW_PAGEVIEW
+        MENUITEM "Page &Edit",                  IDM_VIEW_PAGEEDIT
+        MENUITEM SEPARATOR
+        MENUITEM "&Font...",                    IDM_VIEW_FONT
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Settings...",                IDM_TOOLS_OPTIONS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...",                   IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
