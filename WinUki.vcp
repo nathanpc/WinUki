@@ -751,6 +751,124 @@ DEP_CPP_TREEV=\
 # End Source File
 # Begin Source File
 
+SOURCE=.\Sources\UkiHelper.c
+
+!IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Debug"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Debug"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Debug"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Debug"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Debug"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Release"
+
+DEP_CPP_UKIHE=\
+	".\Sources\UkiHelper.h"\
+	
+NODEP_CPP_UKIHE=\
+	".\Sources\uki.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
+
+DEP_CPP_UKIHE=\
+	"..\..\Projects\libuki\src\article.h"\
+	"..\..\Projects\libuki\src\config.h"\
+	"..\..\Projects\libuki\src\constants.h"\
+	"..\..\Projects\libuki\src\template.h"\
+	"..\..\Projects\libuki\src\uki.h"\
+	"..\..\Projects\libuki\src\windowshelper.h"\
+	".\Sources\UkiHelper.h"\
+	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\Sources\Utilities.c
 
 !IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
@@ -1021,6 +1139,10 @@ SOURCE=.\Sources\PageManager.h
 # Begin Source File
 
 SOURCE=.\Sources\TreeViewManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Sources\UkiHelper.h
 # End Source File
 # Begin Source File
 

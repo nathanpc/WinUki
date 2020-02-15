@@ -20,7 +20,7 @@
 LPCTSTR szAppName = L"WinUki";
 HINSTANCE hInst;
 int uki_error;
-const char *wipath = "\\testuki";
+LPCTSTR szWikiPath = L"\\testuki";
 const char *wipage = "something";
 
 /**
@@ -59,86 +59,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 /**
- * Initializes the Uki environment.
- *
- * @param  szWikiPath Path to the uki wiki root.
- * @return            FALSE if everything went fine.
- */
-int InitializeUki(const char *szWikiPath) {
-	uki_variable_t var;
-	uki_article_t article;
-	uki_template_t template;
-	size_t it = 0;
-	size_t ia = 0;
-	uint8_t iv = 0;
-	char *content;
-
-	// Initialize the uki wiki.
-	if ((uki_error = uki_initialize(szWikiPath)) != UKI_OK) {
-		PrintDebugConsole(uki_error_msg(uki_error));
-		uki_clean();
-
-		return 1;
-	}
-
-	// Print configurations.
-	PrintDebugConsole("Configurations:\r\n");
-	var = uki_config(iv);
-	while (var.key != NULL) {
-		PrintDebugConsole("   %s <- %s\r\n", var.key, var.value);
-		iv++;
-		var = uki_config(iv);
-	}
-	PrintDebugConsole("\r\n");
-
-	// Print variables.
-	PrintDebugConsole("Variables:\r\n");
-	iv = 0;
-	var = uki_variable(iv);
-	while (var.key != NULL) {
-		PrintDebugConsole("   %s <- %s\r\n", var.key, var.value);
-		iv++;
-		var = uki_variable(iv);
-	}
-	PrintDebugConsole("\r\n");
-
-	// Print templates.
-	it = 0;
-	PrintDebugConsole("Templates:\r\n");
-	template = uki_template(it);
-	while (template.name != NULL) {
-		PrintDebugConsole("   %d %s  |  %s <- %s\r\n", template.deepness,
-			template.parent, template.path, template.name);
-		it++;
-		template = uki_template(it);
-	}
-	PrintDebugConsole("\r\n");
-
-	// Print articles.
-	PrintDebugConsole("Articles:\r\n");
-	article = uki_article(ia);
-	while (article.name != NULL) {
-		PrintDebugConsole("   %d %s  |  %s <- %s\r\n", article.deepness,
-			article.parent, article.path, article.name);
-		ia++;
-		article = uki_article(ia);
-	}
-	PrintDebugConsole("\r\n");
-
-	// Render a page.
-	if ((uki_error = uki_render_page(&content, wipage)) != UKI_OK) {
-		PrintDebugConsole("ERROR: %s", uki_error_msg(uki_error));
-		uki_clean();
-
-		return 1;
-	}
-
-	// Print the page content.
-	PrintDebugConsole("%s\r\n", content);
-	return 0;
-}
-
-/**
  * Populates the Articles node in the TreeView.
  *
  * @param  htiParent     Parent TreeView node handle.
@@ -151,15 +71,12 @@ size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 						int nDeepness, BOOL bRootNode) {
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
-	uki_article_t ukiArticle;
+	UKIARTICLE ukiArticle;
 	size_t iArticle = iStartArticle;
 
-	// Initialize state variables.
-	ukiArticle = uki_article(iArticle);
-	htiLastItem = (HTREEITEM)NULL;
-
 	// Go through articles.
-	while (ukiArticle.name != NULL) {
+	htiLastItem = (HTREEITEM)NULL;
+	while (GetUkiArticle(&ukiArticle, iArticle)) {
 		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
 			htiLastItem = TreeViewAddItem(htiParent, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_ARTICLE),
@@ -167,7 +84,6 @@ size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 		
 			// Go to the next one.
 			iArticle++;
-			ukiArticle = uki_article(iArticle);
 		} else {
 			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
 				L"Article Population Failed", MB_OK);
@@ -190,15 +106,12 @@ size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
 						 int nDeepness, BOOL bRootNode) {
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
-	uki_template_t ukiTemplate;
+	UKITEMPLATE ukiTemplate;
 	size_t iTemplate = iStartTemplate;
 
-	// Initialize state variables.
-	ukiTemplate = uki_template(iTemplate);
-	htiLastItem = (HTREEITEM)NULL;
-
 	// Go through templates.
-	while (ukiTemplate.name != NULL) {
+	htiLastItem = (HTREEITEM)NULL;
+	while (GetUkiTemplate(&ukiTemplate, iTemplate)) {
 		if (ConvertStringAtoW(szCaption, ukiTemplate.name)) {
 			htiLastItem = TreeViewAddItem(htiParent, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_TEMPLATE),
@@ -206,7 +119,6 @@ size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
 		
 			// Go to the next one.
 			iTemplate++;
-			ukiTemplate = uki_template(iTemplate);
 		} else {
 			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
 				L"Template Population Failed", MB_OK);
@@ -428,9 +340,9 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
 	// Initialize Uki.
-	if (InitializeUki(wipath)) {
-		MessageBox(NULL, L"Failed to initialize Uki", L"Initialization Failure",
-			MB_OK);
+	if (!InitializeUki(szWikiPath)) {
+		MessageBox(NULL, L"Failed to initialize Uki engine.", L"Initialization Failure",
+			MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
@@ -549,7 +461,7 @@ LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
 LRESULT WndMainDestroy(HWND hWnd, UINT wMsg, WPARAM wParam,
 					   LPARAM lParam) {
 	// Clean up.
-	uki_clean();
+	CloseUki();
 
 	// Post quit message and return.
 	PostQuitMessage(0);

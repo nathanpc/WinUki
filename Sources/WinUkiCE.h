@@ -9,16 +9,12 @@
 #define _WINUKICE_H
 
 #include "resource.h"
-#include "uki.h"
+#include "UkiHelper.h"
 
 // Control IDs.
 #define IDC_CMDBAR   201
 #define IDC_TREEVIEW 202
 #define IDC_EDITPAGE 203
-
-
-// Uki stuff.
-int InitializeUki(const char *szWikiPath);
 
 // Instance operators.
 int InitializeApplication(HINSTANCE hInstance);
