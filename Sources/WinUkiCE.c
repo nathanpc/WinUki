@@ -11,6 +11,7 @@
 #include "Utilities.h"
 #include "ImgListManager.h"
 #include "TreeViewManager.h"
+#include "PageManager.h"
 
 // Definitions.
 #define LBL_MAX_LEN 100
@@ -414,6 +415,7 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	HWND hwndTV;
 	HIMAGELIST hIml;
 	RECT rcTreeView;
+	RECT rcPageView;
 
 	// Ensure that the common control DLL is loaded. 
     InitCommonControls();
@@ -435,11 +437,23 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	// Calculate the TreeView control size and position.
 	GetClientRect(hWnd, &rcTreeView);
 	rcTreeView.top += CommandBar_Height(hwndCB);
+	rcTreeView.bottom -= rcTreeView.top;
+	rcTreeView.right /= 3.5;
 
 	// Create the TreeView control.
 	hwndTV = InitializeTreeView(hInst, hWnd, rcTreeView,
 		(HMENU)IDC_TREEVIEW, hIml);
 	PopulateTreeView();
+
+	// Calculate the page view controls size and position.
+	GetClientRect(hWnd, &rcPageView);
+	rcPageView.top = rcTreeView.top;
+	rcPageView.bottom = rcTreeView.bottom;
+	rcPageView.left = rcTreeView.right + 5;
+	rcPageView.right -= rcPageView.left;
+
+	// Create the page controls.
+	InitializePageView(hInst, hWnd, rcPageView, (HMENU)IDC_EDITPAGE);
 
 	return 0;
 }

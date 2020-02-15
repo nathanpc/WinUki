@@ -560,6 +560,85 @@ DEP_CPP_IMGLI=\
 # End Source File
 # Begin Source File
 
+SOURCE=.\Sources\PageManager.c
+
+!IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Release"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
+
+DEP_CPP_PAGEM=\
+	".\Sources\PageManager.h"\
+	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\Sources\TreeViewManager.c
 
 !IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
@@ -914,9 +993,11 @@ DEP_CPP_WINUK=\
 	"..\..\Projects\libuki\src\article.h"\
 	"..\..\Projects\libuki\src\config.h"\
 	"..\..\Projects\libuki\src\constants.h"\
+	"..\..\Projects\libuki\src\template.h"\
 	"..\..\Projects\libuki\src\uki.h"\
 	"..\..\Projects\libuki\src\windowshelper.h"\
 	".\Sources\ImgListManager.h"\
+	".\Sources\PageManager.h"\
 	".\Sources\TreeViewManager.h"\
 	".\Sources\Utilities.h"\
 	".\Sources\WinUkiCE.h"\
@@ -932,6 +1013,10 @@ DEP_CPP_WINUK=\
 # Begin Source File
 
 SOURCE=.\Sources\ImgListManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Sources\PageManager.h
 # End Source File
 # Begin Source File
 

@@ -14,6 +14,7 @@
 // Control IDs.
 #define IDC_CMDBAR   201
 #define IDC_TREEVIEW 202
+#define IDC_EDITPAGE 203
 
 
 // Uki stuff.

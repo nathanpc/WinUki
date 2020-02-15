@@ -18,7 +18,7 @@ HWND InitializeTreeView(HINSTANCE hInst, HWND hwndParent,
 						HIMAGELIST hIml);
 
 // Operations.
-HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPCTSTR szText,
+HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPTSTR szText,
 						  HTREEITEM hInsAfter, int iImage,
 						  LPARAM lParam);
 BOOL TreeViewGetItem(TVITEM *tvItem);
