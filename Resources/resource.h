@@ -15,14 +15,18 @@
 #define IDB_TEMPLATE                    128
 #define IDR_MAINMENU                    129
 #define IDD_FIND                        130
+#define IDD_REPLACE                     131
 #define IDC_CMDBAR                      201
 #define IDC_TREEVIEW                    202
 #define IDC_EDITPAGE                    203
 #define IDC_VIEWPAGE                    204
 #define IDC_FINDNEXT                    1000
 #define IDC_FINDCANCEL                  1001
+#define IDC_REPLACEBTN                  1002
+#define IDC_REPLACEALL                  1003
 #define IDC_FINDEDIT                    1004
 #define IDC_RADIOFINDUP                 1005
+#define IDC_REPLACEEDIT                 1005
 #define IDC_RADIOFINDDOWN               1006
 #define IDC_RADIOFINDANY                1007
 #define IDC_CHECKMATCHCASE              1008
@@ -51,7 +55,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         40023
 #define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           105
