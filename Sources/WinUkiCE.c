@@ -399,6 +399,13 @@ LRESULT WndMainInitMenuPopUp(HWND hWnd, UINT wMsg, WPARAM wParam,
 			IDM_VIEW_PAGEVIEW, MF_BYCOMMAND);
 	}
 
+	// Enable/disable the Find Next button if there's something in the edit box.
+	if (PageEditCanFindNext()) {
+		EnableMenuItem(hMenu, IDM_EDIT_FINDNEXT, MF_BYCOMMAND | MF_ENABLED);
+	} else {
+		EnableMenuItem(hMenu, IDM_EDIT_FINDNEXT, MF_BYCOMMAND | MF_GRAYED);
+	}
+
 	return 0;
 }
 
@@ -441,6 +448,9 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		return SendPageEditMessage(EM_SETSEL, 0, -1);
 	case IDM_EDIT_FIND:
 		ShowFindDialog();
+		break;
+	case IDM_EDIT_FINDNEXT:
+		PageEditFindNext();
 		break;
 	case IDM_VIEW_PAGEVIEW:
 		// Show Page Viwer.

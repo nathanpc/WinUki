@@ -14,6 +14,10 @@
 BOOL InitializeFindReplace(HINSTANCE hParentInst, HWND hParentWindow,
 						   HWND hwndEditCtrl);
 
+// Finding and replacing.
+BOOL PageEditCanFindNext();
+BOOL PageEditFindNext();
+
 // Dialog.
 int ShowFindDialog();
 

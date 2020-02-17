@@ -17,11 +17,15 @@
 HINSTANCE hInst;
 HWND hwndParent;
 HWND hwndEdit;
+HWND hwndDialog;
 TCHAR szNeedle[MAX_FIND_STRLEN + 1];
 int fDirection;
 BOOL fMatchCase;
+BOOL fCanFindNext;
 
 // Private methods.
+LONG FindNext(LPCTSTR szHaystack, LONG nCursorPos);
+BOOL SetFindNextState(HWND hWnd);
 UINT SaveNeedleText(HWND hWnd);
 BOOL DlgFindInit(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam);
 BOOL DlgFindCommand(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam);
@@ -47,8 +51,74 @@ BOOL InitializeFindReplace(HINSTANCE hParentInst, HWND hParentWindow,
 	szNeedle[0] = L'\0';
 	fDirection = IDC_RADIOFINDDOWN;
 	fMatchCase = FALSE;
+	fCanFindNext = FALSE;
 
 	return TRUE;
+}
+
+/**
+ * Performs the "Find Next" operation and selects the needle found in the
+ * haystack of the edit box.
+ *
+ * @return TRUE if we found something.
+ */
+BOOL PageEditFindNext() {
+	LPTSTR szHaystack;
+	LONG nTextLen;
+	LONG nCursorPos;
+	size_t nNeedleLen;
+
+	// Allocate memory for the haystack and get the text.
+	nTextLen = SendDlgItemMessage(hwndParent, IDC_EDITPAGE,
+		WM_GETTEXTLENGTH, 0, 0) + 1;
+	szHaystack = LocalAlloc(LMEM_FIXED, (nTextLen + 1) * sizeof(TCHAR));
+	GetDlgItemText(hwndParent, IDC_EDITPAGE, szHaystack, nTextLen);
+
+	// Get current cursor position and needle length.
+	SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_GETSEL, (WPARAM)NULL,
+		(LPARAM)&nCursorPos);
+	nNeedleLen = wcslen(szNeedle);
+
+	// Find occurence.
+	nCursorPos = FindNext(szHaystack, nCursorPos);
+	if (nCursorPos >= 0L) {
+		// Select the text.
+		ShowPageEditor();
+		SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_SETSEL,
+			(WPARAM)nCursorPos, (LPARAM)(nCursorPos + nNeedleLen));
+	} else {
+		// Show not found message.
+		TCHAR szMsg[MAX_FIND_STRLEN + 21];
+		wsprintf(szMsg, L"Cannot find \"%s\".", szNeedle);
+		MessageBox(NULL, szMsg, L"Not Found", MB_OK | MB_ICONEXCLAMATION);
+	}
+
+	// Clean up and return.
+	LocalFree(szHaystack);
+	return FALSE;
+}
+
+/**
+ * Finds the next occurence of a needle in a haystack after the cursor position.
+ *
+ * @param  szHaystack Haystack to find the needle in.
+ * @param  nCursorPos Starting cursor position.
+ * @return            Cursor position of the next occurence or -1 in case of
+ *                    failure.
+ */
+LONG FindNext(LPCTSTR szHaystack, LONG nCursorPos) {
+	LPCTSTR lpHaystack = szHaystack + nCursorPos;
+	LPTSTR lpFound;
+	LONG nPos;
+
+	// Find occurence.
+	lpFound = wcsstr(lpHaystack, szNeedle);
+	if (lpFound == NULL)
+		return -1L;
+
+	// Calculate the cursor position.
+	nPos = lpFound - szHaystack;
+	return nPos;
 }
 
 /**
@@ -92,24 +162,26 @@ BOOL DlgFindInit(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 
 	// Make sure the text is selected for easily replacing and set focus.
 	SendDlgItemMessage(hWnd, IDC_FINDEDIT, EM_SETSEL, 0, -1);
-	SendMessage(hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(hWnd, IDC_FINDEDIT), TRUE);
+	SendMessage(hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(hWnd, IDC_FINDEDIT),
+		TRUE);
 
 	// Set the selected direction radio button.
 	CheckRadioButton(hWnd, IDC_RADIOFINDUP, IDC_RADIOFINDANY, fDirection);
 
 	// Set the match case checkbox.
 	if (fMatchCase) {
-		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK, BST_CHECKED, 0);
+		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK,
+			BST_CHECKED, 0);
 	} else {
-		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK, BST_UNCHECKED, 0);
+		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK,
+			BST_UNCHECKED, 0);
 	}
 
-	// Enable or disable the Find Next button based on the contents of the edit box.
-	if (SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_GETTEXTLENGTH, 0, 0) > 0) {
-		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), TRUE);
-	} else {
-		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), FALSE);
-	}
+	// Enable/disable the Find Next button if there's something in the edit box.
+	SetFindNextState(hWnd);
+
+	// Store our dialog handle.
+	hwndDialog = hWnd;
 
 	return TRUE;
 }
@@ -151,7 +223,7 @@ BOOL DlgFindCommand(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 	case IDC_FINDNEXT:
 		// Find Next button.
 		SaveNeedleText(hWnd);
-		EndDialog(hWnd, 0);
+		PageEditFindNext();
 		break;
 	case IDC_FINDCANCEL:
 		// Cancel button.
@@ -163,16 +235,30 @@ BOOL DlgFindCommand(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 		switch (HIWORD(wParam)) {
 		case EN_CHANGE:
 			// Change event.
-			if (SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_GETTEXTLENGTH, 0, 0) > 0) {
-				EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), TRUE);
-			} else {
-				EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), FALSE);
-			}
+			SetFindNextState(hWnd);
 		}
 		break;
 	}
 
 	return TRUE;
+}
+
+/**
+ * Sets the "Find Next" button and flag state.
+ *
+ * @param  hWnd This dialog handle.
+ * @return      TRUE if we can find next.
+ */
+BOOL SetFindNextState(HWND hWnd) {
+	if (SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_GETTEXTLENGTH, 0, 0) > 0) {
+		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), TRUE);
+		fCanFindNext = TRUE;
+	} else {
+		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), FALSE);
+		fCanFindNext = FALSE;
+	}
+
+	return fCanFindNext;
 }
 
 /**
@@ -192,4 +278,13 @@ UINT SaveNeedleText(HWND hWnd) {
  */
 int ShowFindDialog() {
 	return DialogBox(hInst, MAKEINTRESOURCE(IDD_FIND), hwndParent, FindDialogProc);
+}
+
+/**
+ * Checks if we can perform a "Find Next" operation.
+ *
+ * @return TRUE if we can.
+ */
+BOOL PageEditCanFindNext() {
+	return fCanFindNext;
 }

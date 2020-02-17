@@ -15,6 +15,10 @@
 #define IDB_TEMPLATE                    128
 #define IDR_MAINMENU                    129
 #define IDD_FIND                        130
+#define IDC_CMDBAR                      201
+#define IDC_TREEVIEW                    202
+#define IDC_EDITPAGE                    203
+#define IDC_VIEWPAGE                    204
 #define IDC_FINDNEXT                    1000
 #define IDC_FINDCANCEL                  1001
 #define IDC_FINDEDIT                    1004
@@ -22,7 +26,6 @@
 #define IDC_RADIOFINDDOWN               1006
 #define IDC_RADIOFINDANY                1007
 #define IDC_CHECKMATCHCASE              1008
-#define IDC_RADIO3                      1013
 #define IDM_FILE_ARTICLE                40001
 #define IDM_FILE_TEMPLATE               40002
 #define IDM_FILE_OPENWS                 40003
@@ -51,6 +54,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         40023
 #define _APS_NEXT_CONTROL_VALUE         1014
-#define _APS_NEXT_SYMED_VALUE           101
+#define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif
