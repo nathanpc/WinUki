@@ -19,7 +19,6 @@
 #define LBL_MAX_LEN 100
 
 // Global variables.
-LPCTSTR szAppName = L"WinUki";
 HINSTANCE hInst;
 int uki_error;
 LPCTSTR szWikiPath = L"\\TestUki";
@@ -171,6 +170,10 @@ LRESULT PopulateTreeView() {
  */
 int InitializeApplication(HINSTANCE hInstance) {
 	WNDCLASS wc;
+	TCHAR szAppName[LBL_MAX_LEN + 1];
+
+	// Load the application name.
+	LoadString(hInst, IDS_APPNAME, szAppName, LBL_MAX_LEN);
 
 	// Register the application's main window class.
 	wc.style = 0;					  // Window style.
@@ -204,7 +207,11 @@ int InitializeApplication(HINSTANCE hInstance) {
  */
 HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow) {
 	HWND hWnd;
+	TCHAR szAppName[LBL_MAX_LEN + 1];
 	hInst = hInstance;
+
+	// Load the application name.
+	LoadString(hInst, IDS_APPNAME, szAppName, LBL_MAX_LEN);
 
 	// Create the main window.
 	hWnd = CreateWindow(szAppName,      // Window class.

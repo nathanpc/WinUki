@@ -4,6 +4,8 @@
 //
 #define IDS_ARTICLE_LIBRARY             1
 #define IDS_TEMPLATE_LIBRARY            2
+#define IDS_APPNAME                     3
+#define IDS_APPVERSION                  4
 #define IDI_APPICON                     101
 #define IDB_TEMPLATELIBRARY             121
 #define IDB_ARTICLE                     122
@@ -16,6 +18,7 @@
 #define IDR_MAINMENU                    129
 #define IDD_FIND                        130
 #define IDD_REPLACE                     131
+#define IDD_ABOUT                       132
 #define IDC_CMDBAR                      201
 #define IDC_TREEVIEW                    202
 #define IDC_EDITPAGE                    203
@@ -55,9 +58,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        132
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         40023
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif
