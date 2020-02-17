@@ -6,6 +6,7 @@
  */
 
 #include <windowsx.h>
+#include <ctype.h>
 #include "FindReplace.h"
 #include "PageManager.h"
 #include "resource.h"
@@ -24,7 +25,7 @@ BOOL fMatchCase;
 BOOL fCanFindNext;
 
 // Private methods.
-LONG FindNext(LPCTSTR szHaystack, LONG nCursorPos);
+LONG FindNext(LPTSTR szHaystack, LONG nCursorPos);
 BOOL SetFindNextState(HWND hWnd);
 UINT SaveNeedleText(HWND hWnd);
 BOOL DlgFindInit(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam);
@@ -67,6 +68,7 @@ BOOL PageEditFindNext() {
 	LONG nTextLen;
 	LONG nCursorPos;
 	size_t nNeedleLen;
+	int fCachedDirection = fDirection;
 
 	// Allocate memory for the haystack and get the text.
 	nTextLen = SendDlgItemMessage(hwndParent, IDC_EDITPAGE,
@@ -78,6 +80,12 @@ BOOL PageEditFindNext() {
 	SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_GETSEL, (WPARAM)NULL,
 		(LPARAM)&nCursorPos);
 	nNeedleLen = wcslen(szNeedle);
+
+	// Respect the direction chosen.
+	if (fDirection == IDC_RADIOFINDANY) {
+		nCursorPos = 0;
+		fDirection = IDC_RADIOFINDDOWN;
+	}
 
 	// Find occurence.
 	nCursorPos = FindNext(szHaystack, nCursorPos);
@@ -91,6 +99,9 @@ BOOL PageEditFindNext() {
 		TCHAR szMsg[MAX_FIND_STRLEN + 21];
 		wsprintf(szMsg, L"Cannot find \"%s\".", szNeedle);
 		MessageBox(NULL, szMsg, L"Not Found", MB_OK | MB_ICONEXCLAMATION);
+
+		// Reset the direction flag in case it was in Any before.
+		fDirection = fCachedDirection;
 	}
 
 	// Clean up and return.
@@ -106,17 +117,45 @@ BOOL PageEditFindNext() {
  * @return            Cursor position of the next occurence or -1 in case of
  *                    failure.
  */
-LONG FindNext(LPCTSTR szHaystack, LONG nCursorPos) {
-	LPCTSTR lpHaystack = szHaystack + nCursorPos;
+LONG FindNext(LPTSTR szHaystack, LONG nCursorPos) {
+	LPTSTR szLocalNeedle;
+	LPTSTR lpLocalNeedle;
+	LPTSTR lpHaystack = szHaystack;
 	LPTSTR lpFound;
 	LONG nPos;
 
+	// Convert everything to uppercase if we want a case insensitive search.
+	if (!fMatchCase) {
+		// Allocate space for string.
+		szLocalNeedle = (LPTSTR)LocalAlloc(LMEM_FIXED, (wcslen(szNeedle) + 1) *
+			sizeof(TCHAR));
+		lpLocalNeedle = szLocalNeedle;
+
+		// Copy needle string and convert to uppercase.
+		wcscpy(szLocalNeedle, szNeedle);
+		for ( ; *lpLocalNeedle; lpLocalNeedle++)
+			*lpLocalNeedle = towupper(*lpLocalNeedle);
+
+		// Convert haystack string to uppercase.
+		for ( ; *lpHaystack; lpHaystack++)
+			*lpHaystack = towupper(*lpHaystack);
+	} else {
+		szLocalNeedle = szNeedle;
+	}
+
 	// Find occurence.
-	lpFound = wcsstr(lpHaystack, szNeedle);
+	lpLocalNeedle = szLocalNeedle;
+	lpHaystack = szHaystack + nCursorPos;
+	lpFound = wcsstr(lpHaystack, szLocalNeedle);
 	if (lpFound == NULL)
 		return -1L;
 
-	// Calculate the cursor position.
+	// Cleanup.
+	if (!fMatchCase) {
+		LocalFree(szLocalNeedle);
+	}
+
+	// Calculate the cursor position and return.
 	nPos = lpFound - szHaystack;
 	return nPos;
 }
