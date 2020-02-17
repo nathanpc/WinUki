@@ -14,6 +14,14 @@
 #define IDB_LIBRARY                     127
 #define IDB_TEMPLATE                    128
 #define IDR_MAINMENU                    129
+#define IDD_FIND                        130
+#define IDC_FINDNEXT                    1000
+#define IDC_CANCEL                      1001
+#define IDC_EDITFIND                    1004
+#define IDC_RADIOUP                     1005
+#define IDC_RADIODOWN                   1006
+#define IDC_RADIOANY                    1007
+#define IDC_CHECKMATCHCASE              1008
 #define IDM_FILE_ARTICLE                40001
 #define IDM_FILE_TEMPLATE               40002
 #define IDM_FILE_OPENWS                 40003
@@ -21,7 +29,6 @@
 #define IDM_FILE_SAVEAS                 40005
 #define IDM_FILE_CLOSE                  40007
 #define IDM_EDIT_UNDO                   40008
-#define IDM_EDIT_REDO                   40009
 #define IDM_EDIT_CUT                    40010
 #define IDM_EDIT_COPY                   40011
 #define IDM_EDIT_PASTE                  40012
@@ -40,9 +47,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         40023
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

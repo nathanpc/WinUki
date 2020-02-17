@@ -125,6 +125,50 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Dialog
+//
+
+IDD_FIND DIALOG DISCARDABLE  0, 0, 242, 60
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Find"
+FONT 8, "System"
+BEGIN
+    DEFPUSHBUTTON   "Find Next",IDC_FINDNEXT,185,7,50,14
+    PUSHBUTTON      "Cancel",IDC_CANCEL,185,24,50,14
+    LTEXT           "Find What: ",IDC_STATIC,7,9,38,8
+    EDITTEXT        IDC_EDITFIND,47,7,133,14,ES_AUTOHSCROLL
+    GROUPBOX        "Direction",IDC_STATIC,71,23,109,30
+    CONTROL         "Up",IDC_RADIOUP,"Button",BS_AUTORADIOBUTTON,79,35,25,10
+    CONTROL         "Down",IDC_RADIODOWN,"Button",BS_AUTORADIOBUTTON,109,35,
+                    34,10
+    CONTROL         "Any",IDC_RADIOANY,"Button",BS_AUTORADIOBUTTON,147,35,29,
+                    10
+    CONTROL         "Match Case",IDC_CHECKMATCHCASE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,35,53,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_FIND, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 53
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 

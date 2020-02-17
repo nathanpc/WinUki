@@ -24,6 +24,7 @@ BOOL PopulatePageViewArticle(const size_t nIndex);
 BOOL PopulatePageViewTemplate(const size_t nIndex);
 
 // Visibility.
+BOOL IsPageEditorActive();
 void ShowPageViewer();
 void ShowPageEditor();
 void TogglePageView();

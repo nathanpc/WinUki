@@ -260,6 +260,8 @@ LRESULT CALLBACK MainWindowProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 		return WndMainCreate(hWnd, wMsg, wParam, lParam);
 	case WM_COMMAND:
 		return WndMainCommand(hWnd, wMsg, wParam, lParam);
+	case WM_INITMENUPOPUP:
+		return WndMainInitMenuPopUp(hWnd, wMsg, wParam, lParam);
 //	case WM_HIBERNATE:
 //		return WndMainHibernate(hWnd, wMsg, wParam, lParam);
 //	case WM_ACTIVATE:
@@ -365,6 +367,38 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 }
 
 /**
+ * Process the WM_INITMENUPUP message for the window.
+ *
+ * @param  hWnd   Window handler.
+ * @param  wMsg   Message type.
+ * @param  wParam Message parameter.
+ * @param  lParam Message parameter.
+ * @return        0 if everything worked.
+ */
+LRESULT WndMainInitMenuPopUp(HWND hWnd, UINT wMsg, WPARAM wParam,
+							 LPARAM lParam) {
+	HMENU hMenu = CommandBar_GetMenu(GetDlgItem(hWnd, IDC_CMDBAR), 0);
+
+	// Check if we can undo and enable/disable the menu item accordingly.
+	if (SendPageEditMessage(EM_CANUNDO, 0, 0)) {
+		EnableMenuItem(hMenu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED);
+	} else {
+		EnableMenuItem(hMenu, IDM_EDIT_UNDO, MF_BYCOMMAND | MF_GRAYED);
+	}
+
+	// Check if editing or viewing a page and change the menu radio group.
+	if (IsPageEditorActive()) {
+		CheckMenuRadioItem(hMenu, IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT,
+			IDM_VIEW_PAGEEDIT, MF_BYCOMMAND);
+	} else {
+		CheckMenuRadioItem(hMenu, IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT,
+			IDM_VIEW_PAGEVIEW, MF_BYCOMMAND);
+	}
+
+	return 0;
+}
+
+/**
  * Process the WM_COMMAND message for the window.
  *
  * @param  hWnd   Window handler.
@@ -401,6 +435,8 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDM_EDIT_SELECTALL:
 		// Select All.
 		return SendPageEditMessage(EM_SETSEL, 0, -1);
+	case IDM_EDIT_FIND:
+		// TODO: OPEN DIALOG.
 		break;
 	case IDM_VIEW_PAGEVIEW:
 		// Show Page Viwer.

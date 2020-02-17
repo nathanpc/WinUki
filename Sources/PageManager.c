@@ -82,16 +82,6 @@ LRESULT SendPageEditMessage(UINT wMsg, WPARAM wParam, LPARAM lParam) {
 LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 							  LPARAM lParam) {
 	switch(HIWORD(wParam)) {
-	case EN_UPDATE:
-		if (SendPageEditMessage(EM_CANUNDO, 0, 0)) {
-			// TODO: FIX THIS.
-			EnableMenuItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
-				IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED);
-		} else {
-			EnableMenuItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
-				IDM_EDIT_UNDO, MF_BYCOMMAND | MF_ENABLED | MF_GRAYED);
-		}
-		return 0;
 	default:
 		return DefWindowProc(hWnd, wMsg, wParam, lParam);
 	}
@@ -103,13 +93,6 @@ LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
  * Shows the HTML viewer control.
  */
 void ShowPageViewer() {
-	HMENU hMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU));
-	hMenu = GetSubMenu(hMenu, 2);
-	CheckMenuItem(hMenu, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND | MF_CHECKED);
-	CheckMenuItem(hMenu, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND | MF_UNCHECKED);
-	//CheckMenuRadioItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
-	//	IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND);
-
 	ShowWindow(hwndPageEdit, SW_HIDE);
 	ShowWindow(hwndPageView, SW_SHOW);
 }
@@ -118,12 +101,6 @@ void ShowPageViewer() {
  * Shows the page editor control.
  */
 void ShowPageEditor() {
-	HMENU hMenu = LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU));
-	hMenu = GetSubMenu(hMenu, 2);
-	CheckMenuItem(hMenu, IDM_VIEW_PAGEVIEW, MF_BYCOMMAND | MF_UNCHECKED);
-	CheckMenuItem(hMenu, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND | MF_CHECKED);
-	//CheckMenuRadioItem(LoadMenu(hInst, MAKEINTRESOURCE(IDR_MAINMENU)),
-	//	IDM_VIEW_PAGEVIEW, IDM_VIEW_PAGEEDIT, IDM_VIEW_PAGEEDIT, MF_BYCOMMAND);
 	ShowWindow(hwndPageView, SW_HIDE);
 	ShowWindow(hwndPageEdit, SW_SHOW);
 }
@@ -132,11 +109,20 @@ void ShowPageEditor() {
  * Toggles between the HTML viewer and editor controls.
  */
 void TogglePageView() {
-	if (IsWindowVisible(hwndPageView)) {
-		ShowPageEditor();
-	} else {
+	if (IsPageEditorActive()) {
 		ShowPageViewer();
+	} else {
+		ShowPageEditor();
 	}
+}
+
+/**
+ * Checks if the page editor is currently active.
+ *
+ * @return TRUE if the user is editing a page.
+ */
+BOOL IsPageEditorActive() {
+	return IsWindowVisible(hwndPageEdit);
 }
 
 /**
