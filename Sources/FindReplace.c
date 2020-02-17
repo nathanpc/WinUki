@@ -5,6 +5,7 @@
  * @author Nathan Campos <hi@nathancampos.me>
  */
 
+#include <windowsx.h>
 #include "FindReplace.h"
 #include "PageManager.h"
 #include "resource.h"
@@ -89,6 +90,10 @@ BOOL DlgFindInit(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 	SendDlgItemMessage(hWnd, IDC_FINDEDIT, EM_LIMITTEXT, MAX_FIND_STRLEN, 0);
 	SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_SETTEXT, 0, (LPARAM)szNeedle);
 
+	// Make sure the text is selected for easily replacing and set focus.
+	SendDlgItemMessage(hWnd, IDC_FINDEDIT, EM_SETSEL, 0, -1);
+	SendMessage(hWnd, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(hWnd, IDC_FINDEDIT), TRUE);
+
 	// Set the selected direction radio button.
 	CheckRadioButton(hWnd, IDC_RADIOFINDUP, IDC_RADIOFINDANY, fDirection);
 
@@ -97,6 +102,13 @@ BOOL DlgFindInit(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK, BST_CHECKED, 0);
 	} else {
 		SendDlgItemMessage(hWnd, IDC_CHECKMATCHCASE, BM_SETCHECK, BST_UNCHECKED, 0);
+	}
+
+	// Enable or disable the Find Next button based on the contents of the edit box.
+	if (SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_GETTEXTLENGTH, 0, 0) > 0) {
+		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), TRUE);
+	} else {
+		EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), FALSE);
 	}
 
 	return TRUE;
@@ -145,6 +157,18 @@ BOOL DlgFindCommand(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam) {
 		// Cancel button.
 		SaveNeedleText(hWnd);
 		EndDialog(hWnd, 0);
+		break;
+	case IDC_FINDEDIT:
+		// Find edit box.
+		switch (HIWORD(wParam)) {
+		case EN_CHANGE:
+			// Change event.
+			if (SendDlgItemMessage(hWnd, IDC_FINDEDIT, WM_GETTEXTLENGTH, 0, 0) > 0) {
+				EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), TRUE);
+			} else {
+				EnableWindow(GetDlgItem(hWnd, IDC_FINDNEXT), FALSE);
+			}
+		}
 		break;
 	}
 
