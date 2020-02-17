@@ -346,7 +346,7 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	GetClientRect(hWnd, &rcTreeView);
 	rcTreeView.top += CommandBar_Height(hwndCB);
 	rcTreeView.bottom -= rcTreeView.top;
-	rcTreeView.right /= 3.5;
+	rcTreeView.right = (LONG)(rcTreeView.right / 3.5);
 
 	// Create the TreeView control.
 	hwndTV = InitializeTreeView(hInst, hWnd, rcTreeView,
@@ -428,6 +428,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		// Close.
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);
 	case IDM_EDIT_UNDO:
+		// Undo.
 		if (SendPageEditMessage(EM_CANUNDO, 0, 0)) 
 			return SendPageEditMessage(WM_UNDO, 0, 0);
 		break;
@@ -447,10 +448,16 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		// Select All.
 		return SendPageEditMessage(EM_SETSEL, 0, -1);
 	case IDM_EDIT_FIND:
+		// Show Find dialog.
 		ShowFindDialog();
 		break;
 	case IDM_EDIT_FINDNEXT:
-		PageEditFindNext();
+		// Find Next.
+		PageEditFindNext(TRUE);
+		break;
+	case IDM_EDIT_REPLACE:
+		// Show Replace dialog.
+		ShowReplaceDialog();
 		break;
 	case IDM_VIEW_PAGEVIEW:
 		// Show Page Viwer.
