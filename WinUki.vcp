@@ -448,6 +448,130 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\Sources\FindReplace.c
+
+!IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH4) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE SH3) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE ARM) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Release"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+NODEP_CPP_FINDR=\
+	".\Sources\resource.h"\
+	
+
+!ELSEIF  "$(CFG)" == "WinUki - Win32 (WCE x86em) Debug"
+
+DEP_CPP_FINDR=\
+	".\Sources\FindReplace.h"\
+	".\Sources\PageManager.h"\
+	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\Sources\ImgListManager.c
 
 !IF  "$(CFG)" == "WinUki - Win32 (WCE MIPS) Release"
@@ -1124,6 +1248,7 @@ DEP_CPP_WINUK=\
 	"..\..\Projects\libuki\src\template.h"\
 	"..\..\Projects\libuki\src\uki.h"\
 	"..\..\Projects\libuki\src\windowshelper.h"\
+	".\Sources\FindReplace.h"\
 	".\Sources\ImgListManager.h"\
 	".\Sources\PageManager.h"\
 	".\Sources\TreeViewManager.h"\
@@ -1139,6 +1264,10 @@ DEP_CPP_WINUK=\
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\Sources\FindReplace.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\Sources\ImgListManager.h

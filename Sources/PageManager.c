@@ -149,8 +149,27 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
  * Shows the HTML viewer control.
  */
 void ShowPageViewer() {
+	LPTSTR szEditorContents;
+	LONG nTextLen;
+
 	ShowWindow(hwndPageEdit, SW_HIDE);
 	ShowWindow(hwndPageView, SW_SHOW);
+
+	// TODO: Check for modifications.
+
+	// Allocate buffer and populate it.
+	nTextLen = SendMessage(hwndPageEdit, WM_GETTEXTLENGTH, 0, 0) + 1;
+	szEditorContents = LocalAlloc(LMEM_FIXED, (nTextLen + 1) * sizeof(TCHAR));
+	SendMessage(hwndPageEdit, WM_GETTEXT, (WPARAM)nTextLen,
+		(LPARAM)szEditorContents);
+
+	// Set page view contents to page editor.
+    SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
+    SendMessage(hwndPageView, DTM_ADDTEXTW, 0, (LPARAM)szEditorContents);
+    SendMessage(hwndPageView, DTM_ENDOFSOURCE, 0, 0);
+
+	// Clean up.
+	LocalFree(szEditorContents);
 }
 
 /**
