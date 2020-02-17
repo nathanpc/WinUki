@@ -90,42 +90,6 @@ LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 }
 
 /**
- * Shows the HTML viewer control.
- */
-void ShowPageViewer() {
-	ShowWindow(hwndPageEdit, SW_HIDE);
-	ShowWindow(hwndPageView, SW_SHOW);
-}
-
-/**
- * Shows the page editor control.
- */
-void ShowPageEditor() {
-	ShowWindow(hwndPageView, SW_HIDE);
-	ShowWindow(hwndPageEdit, SW_SHOW);
-}
-
-/**
- * Toggles between the HTML viewer and editor controls.
- */
-void TogglePageView() {
-	if (IsPageEditorActive()) {
-		ShowPageViewer();
-	} else {
-		ShowPageEditor();
-	}
-}
-
-/**
- * Checks if the page editor is currently active.
- *
- * @return TRUE if the user is editing a page.
- */
-BOOL IsPageEditorActive() {
-	return IsWindowVisible(hwndPageEdit);
-}
-
-/**
  * Populates the page view with an article.
  *
  * @param  nIndex Article index.
@@ -179,4 +143,58 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
 	LocalFree(szFileContents);
 
 	return TRUE;
+}
+
+/**
+ * Shows the HTML viewer control.
+ */
+void ShowPageViewer() {
+	ShowWindow(hwndPageEdit, SW_HIDE);
+	ShowWindow(hwndPageView, SW_SHOW);
+}
+
+/**
+ * Shows the page editor control.
+ */
+void ShowPageEditor() {
+	ShowWindow(hwndPageView, SW_HIDE);
+	ShowWindow(hwndPageEdit, SW_SHOW);
+}
+
+/**
+ * Toggles between the HTML viewer and editor controls.
+ */
+void TogglePageView() {
+	if (IsPageEditorActive()) {
+		ShowPageViewer();
+	} else {
+		ShowPageEditor();
+	}
+}
+
+/**
+ * Checks if the page editor is currently active.
+ *
+ * @return TRUE if the user is editing a page.
+ */
+BOOL IsPageEditorActive() {
+	return IsWindowVisible(hwndPageEdit);
+}
+
+/**
+ * Fetches the page editor window handle.
+ *
+ * @return The page editor window handle.
+ */
+HWND GetPageEditHandle() {
+	return hwndPageEdit;
+}
+
+/**
+ * Fetches the page viewer window handle.
+ *
+ * @return The page viewer window handle.
+ */
+HWND GetPageViewHandle() {
+	return hwndPageView;
 }

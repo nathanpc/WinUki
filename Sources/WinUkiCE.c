@@ -13,6 +13,7 @@
 #include "ImgListManager.h"
 #include "TreeViewManager.h"
 #include "PageManager.h"
+#include "FindReplace.h"
 
 // Definitions.
 #define LBL_MAX_LEN 100
@@ -363,6 +364,9 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	InitializePageView(hInst, hWnd, rcPageView, (HMENU)IDC_EDITPAGE,
 		(HMENU)IDC_VIEWPAGE);
 
+	// Initialize the find and replace engine.
+	InitializeFindReplace(hInst, hWnd, GetPageEditHandle());
+
 	return 0;
 }
 
@@ -436,7 +440,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		// Select All.
 		return SendPageEditMessage(EM_SETSEL, 0, -1);
 	case IDM_EDIT_FIND:
-		// TODO: OPEN DIALOG.
+		ShowFindDialog();
 		break;
 	case IDM_VIEW_PAGEVIEW:
 		// Show Page Viwer.

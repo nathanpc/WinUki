@@ -16,12 +16,13 @@
 #define IDR_MAINMENU                    129
 #define IDD_FIND                        130
 #define IDC_FINDNEXT                    1000
-#define IDC_CANCEL                      1001
-#define IDC_EDITFIND                    1004
-#define IDC_RADIOUP                     1005
-#define IDC_RADIODOWN                   1006
-#define IDC_RADIOANY                    1007
+#define IDC_FINDCANCEL                  1001
+#define IDC_FINDEDIT                    1004
+#define IDC_RADIOFINDUP                 1005
+#define IDC_RADIOFINDDOWN               1006
+#define IDC_RADIOFINDANY                1007
 #define IDC_CHECKMATCHCASE              1008
+#define IDC_RADIO3                      1013
 #define IDM_FILE_ARTICLE                40001
 #define IDM_FILE_TEMPLATE               40002
 #define IDM_FILE_OPENWS                 40003
@@ -49,7 +50,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         40023
-#define _APS_NEXT_CONTROL_VALUE         1009
+#define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

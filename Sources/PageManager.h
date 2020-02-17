@@ -29,4 +29,8 @@ void ShowPageViewer();
 void ShowPageEditor();
 void TogglePageView();
 
+// Handle getters.
+HWND GetPageEditHandle();
+HWND GetPageViewHandle();
+
 #endif  // _PAGEMANAGER_H
