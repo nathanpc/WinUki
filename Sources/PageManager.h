@@ -20,6 +20,7 @@ LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 							  LPARAM lParam);
 
 // Population.
+BOOL ShowWelcomePage();
 BOOL PopulatePageViewArticle(const size_t nIndex);
 BOOL PopulatePageViewTemplate(const size_t nIndex);
 

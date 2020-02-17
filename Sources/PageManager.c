@@ -18,7 +18,6 @@ HINSTANCE hinstHTML;
 HWND hwndPageEdit;
 HWND hwndPageView;
 
-
 /**
  * Initializes the TreeView component.
  *
@@ -54,6 +53,9 @@ BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 
 	// Make images fit the HTML viewer.
 	PostMessage(hwndPageView, DTM_ENABLESHRINK, 0, (LPARAM)TRUE);
+
+	// Show welcome.
+	ShowWelcomePage();
 	
 	return TRUE;
 }
@@ -142,6 +144,34 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
 	// Free the file contents buffer.
 	LocalFree(szFileContents);
 
+	return TRUE;
+}
+
+/**
+ * Shows a nice welcome page in the page viewer.
+ *
+ * @return TRUE if the operation was successful.
+ */
+BOOL ShowWelcomePage() {
+	HRSRC hrSource;
+	HGLOBAL hResource;
+	LPCTSTR szHTML;
+	
+	// Get source information handle.
+	hrSource = FindResource(NULL, MAKEINTRESOURCE(IDR_WELCOME), RT_RCDATA);
+	if (hrSource == NULL)
+		return FALSE;
+
+	// Get resource handle.
+	hResource = LoadResource(NULL, hrSource);
+	if (hResource == NULL)
+		return FALSE;
+	
+	// Get resource contents.
+	szHTML = (LPCTSTR)LockResource(hResource);
+	if (szHTML == NULL)
+		return FALSE;
+	
 	return TRUE;
 }
 

@@ -19,6 +19,7 @@
 #define IDD_FIND                        130
 #define IDD_REPLACE                     131
 #define IDD_ABOUT                       132
+#define IDR_WELCOME                     133
 #define IDC_CMDBAR                      201
 #define IDC_TREEVIEW                    202
 #define IDC_EDITPAGE                    203
@@ -58,7 +59,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         40023
 #define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           105

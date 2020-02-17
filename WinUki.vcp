@@ -1363,6 +1363,10 @@ SOURCE=.\Resources\Template.bmp
 
 SOURCE=.\Resources\TemplateLibrary.bmp
 # End Source File
+# Begin Source File
+
+SOURCE=.\Resources\Welcome.htm
+# End Source File
 # End Group
 # End Target
 # End Project
