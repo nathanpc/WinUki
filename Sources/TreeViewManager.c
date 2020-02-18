@@ -94,3 +94,12 @@ BOOL TreeViewExpandNode(HTREEITEM hNode) {
 	return TreeView_Expand(hwndTreeView, hNode, TVE_EXPAND);
 }
 
+/**
+ * Clears the entire TreeView contents.
+ *
+ * @return TRUE if the operation was successful.
+ */
+BOOL TreeViewClear() {
+	return TreeView_DeleteAllItems(hwndTreeView);
+}
+

@@ -14,6 +14,7 @@
 #include "TreeViewManager.h"
 #include "PageManager.h"
 #include "FindReplace.h"
+#include "CommonDlgManager.h"
 
 // Definitions.
 #define LBL_MAX_LEN 100
@@ -21,7 +22,6 @@
 // Global variables.
 HINSTANCE hInst;
 int uki_error;
-LPCTSTR szWikiPath = L"\\TestUki";
 
 /**
  * Application's main entry point.
@@ -56,6 +56,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	// Clean up.
 	return TerminateInstance(hInstance, msg.wParam);
+}
+
+/**
+ * Loads a Uki workspace.
+ *
+ * @return 0 if a workspace was loaded.
+ */
+LRESULT LoadWorkspace() {
+	TCHAR szWikiPath[MAX_PATH];
+
+	// Get the workspace folder.
+	if (!OpenWorkspace(szWikiPath))
+		return 1;
+
+	// Set all controls to its defaults.
+	ClearPageToDefaults();
+	TreeViewClear();
+
+	// Initialize Uki.
+	CloseUki();
+	InitializeUki(szWikiPath);
+
+	// Populate the TreeView with stuff.
+	PopulateTreeView();
+
+	return 0;
 }
 
 /**
@@ -346,9 +372,6 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	CommandBar_InsertMenubar(hwndCB, hInst, IDR_MAINMENU, 0);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
-	// Initialize Uki.
-	InitializeUki(szWikiPath);
-
 	// Calculate the TreeView control size and position.
 	GetClientRect(hWnd, &rcTreeView);
 	rcTreeView.top += CommandBar_Height(hwndCB);
@@ -358,7 +381,6 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	// Create the TreeView control.
 	hwndTV = InitializeTreeView(hInst, hWnd, rcTreeView,
 		(HMENU)IDC_TREEVIEW, hIml);
-	PopulateTreeView();
 
 	// Calculate the page view controls size and position.
 	GetClientRect(hWnd, &rcPageView);
@@ -431,6 +453,9 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDC_EDITPAGE:
 		// Page Editor.
 		return PageEditHandleCommand(hWnd, wMsg, wParam, lParam);
+	case IDM_FILE_OPENWS:
+		// Open Workspace.
+		return LoadWorkspace();
 	case IDM_FILE_CLOSE:
 		// Close.
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);

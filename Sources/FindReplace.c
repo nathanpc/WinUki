@@ -44,10 +44,10 @@ BOOL CALLBACK ReplaceDialogProc(HWND hWnd, UINT wMsg, WPARAM wParam,
 /**
  * Initializes our Find/Replace engine.
  *
- * @param  hParentInst Application interface handle.
- * @param  hwndParent  Parent window handle.
- * @param  hwnEditCtrl Edit control handle to be used.
- * @return             TRUE if the initialization succeeded.
+ * @param  hParentInst   Application interface handle.
+ * @param  hParentWindow Parent window handle.
+ * @param  hwnEditCtrl   Edit control handle to be used.
+ * @return               TRUE if the initialization succeeded.
  */
 BOOL InitializeFindReplace(HINSTANCE hParentInst, HWND hParentWindow,
 						   HWND hwndEditCtrl) {

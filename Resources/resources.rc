@@ -81,13 +81,16 @@ BEGIN
     BEGIN
         POPUP "&New"
         BEGIN
-            MENUITEM "&Article...",                 IDM_FILE_ARTICLE
+            MENUITEM "&Article...",                 IDM_FILE_ARTICLE, GRAYED
             MENUITEM "&Template...",                IDM_FILE_TEMPLATE
+            , GRAYED
+            MENUITEM SEPARATOR
+            MENUITEM "&Workspace...",               IDM_FILE_NEWWS
         END
         MENUITEM "&Open Workspace...",          IDM_FILE_OPENWS
         MENUITEM SEPARATOR
-        MENUITEM "&Save",                       IDM_FILE_SAVE
-        MENUITEM "Save As...",                  IDM_FILE_SAVEAS
+        MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
+        MENUITEM "Save As...",                  IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "&Close",                      IDM_FILE_CLOSE
     END
@@ -109,8 +112,6 @@ BEGIN
     BEGIN
         MENUITEM "Page &View",                  IDM_VIEW_PAGEVIEW, CHECKED
         MENUITEM "Page &Edit",                  IDM_VIEW_PAGEEDIT
-        MENUITEM SEPARATOR
-        MENUITEM "&Font...",                    IDM_VIEW_FONT
     END
     POPUP "&Tools"
     BEGIN
@@ -211,13 +212,6 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// HTML
-//
-
-IDR_WELCOME             HTML    DISCARDABLE     "Welcome.htm"
 
 /////////////////////////////////////////////////////////////////////////////
 //

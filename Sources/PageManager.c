@@ -13,10 +13,12 @@
 
 // Global variables.
 HINSTANCE hInst;
-LPCTSTR szHTMLControlLibrary = L"htmlview.dll";
 HINSTANCE hinstHTML;
 HWND hwndPageEdit;
 HWND hwndPageView;
+
+// Private methods.
+BOOL ShowWelcomePage();
 
 /**
  * Initializes the TreeView component.
@@ -54,8 +56,8 @@ BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 	// Make images fit the HTML viewer.
 	PostMessage(hwndPageView, DTM_ENABLESHRINK, 0, (LPARAM)TRUE);
 
-	// Show welcome.
-	ShowWelcomePage();
+	// Reset all the controls to the defaults.
+	ClearPageToDefaults();
 	
 	return TRUE;
 }
@@ -153,25 +155,9 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
  * @return TRUE if the operation was successful.
  */
 BOOL ShowWelcomePage() {
-	HRSRC hrSource;
-	HGLOBAL hResource;
-	LPCTSTR szHTML;
-	
-	// Get source information handle.
-	hrSource = FindResource(NULL, MAKEINTRESOURCE(IDR_WELCOME), RT_RCDATA);
-	if (hrSource == NULL)
-		return FALSE;
+	// TODO: Load a static folder with the assets from the program root.
+    SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
 
-	// Get resource handle.
-	hResource = LoadResource(NULL, hrSource);
-	if (hResource == NULL)
-		return FALSE;
-	
-	// Get resource contents.
-	szHTML = (LPCTSTR)LockResource(hResource);
-	if (szHTML == NULL)
-		return FALSE;
-	
 	return TRUE;
 }
 
@@ -219,6 +205,14 @@ void TogglePageView() {
 	} else {
 		ShowPageEditor();
 	}
+}
+
+/**
+ * Clears the page viewer and editor to its defaults.
+ */
+void ClearPageToDefaults() {
+	ShowWelcomePage();
+	SendMessage(hwndPageEdit, WM_SETTEXT, 0, (LPARAM)L"");
 }
 
 /**

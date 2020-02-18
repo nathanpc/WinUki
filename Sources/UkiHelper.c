@@ -37,6 +37,47 @@ BOOL InitializeUki(LPCTSTR szWikiPath) {
 }
 
 /**
+ * Grabs a Uki wiki root path from the manifest path.
+ *
+ * @param  szWikiRoot     Pre-allocated string to store the wiki root path.
+ * @param  szManifestPath Path to the manifest file.
+ * @return                TRUE if we were able to get the wiki root.
+ */
+BOOL GetUkiRootFromManifest(LPTSTR szWikiRoot, LPCTSTR szManifestPath) {
+	LPCTSTR lpLastSeparator;
+	LPCTSTR lpManifest;
+	LPTSTR lpRoot;
+
+	// Initialize the pointers.
+	lpLastSeparator = szManifestPath;
+	lpManifest = szManifestPath;
+	lpRoot = szWikiRoot;
+
+	// Go through manifest path looking for path separators.
+	for (; *lpManifest != L'\0'; lpManifest++) {
+		if (*lpManifest == L'\\')
+			lpLastSeparator = lpManifest;
+	}
+
+	// Check if we found anything.
+	if (lpLastSeparator == szManifestPath)
+		return FALSE;
+
+	// Copy path to the root buffer.
+	lpManifest = szManifestPath;
+	lpLastSeparator++;
+	for (; lpManifest != lpLastSeparator; lpManifest++) {
+		*lpRoot = *lpManifest;
+		lpRoot++;
+		*lpRoot = L'\0';
+	}
+
+	// Terminate the path string and return.
+	lpRoot = L'\0';
+	return TRUE;
+}
+
+/**
  * Grabs an article path.
  *
  * @param  szArticlePath Pre-allocated buffer to receive the file path.

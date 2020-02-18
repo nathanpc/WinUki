@@ -16,6 +16,9 @@ int InitializeApplication(HINSTANCE hInstance);
 HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 int TerminateInstance(HINSTANCE hInstance, int nDefRC);
 
+// Uki workspace.
+LRESULT LoadWorkspace();
+
 // Control managers.
 size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
 						int nDeepness, BOOL bRootNode);

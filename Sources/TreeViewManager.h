@@ -16,6 +16,7 @@
 HWND InitializeTreeView(HINSTANCE hInst, HWND hwndParent,
 						RECT rcClient, HMENU hTreeViewID,
 						HIMAGELIST hIml);
+BOOL TreeViewClear();
 
 // Operations.
 HTREEITEM TreeViewAddItem(HTREEITEM hParent, LPTSTR szText,

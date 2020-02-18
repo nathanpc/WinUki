@@ -18,6 +18,9 @@
 // Messages.
 void ShowUkiErrorDialog(int nErrorCode);
 
+// Miscellaneous utilities.
+BOOL GetUkiRootFromManifest(LPTSTR szWikiRoot, LPCTSTR szManifestPath);
+
 // Initialization and destruction.
 void CloseUki();
 BOOL InitializeUki(LPCTSTR szWikiPath);

@@ -19,7 +19,6 @@
 #define IDD_FIND                        130
 #define IDD_REPLACE                     131
 #define IDD_ABOUT                       132
-#define IDR_WELCOME                     133
 #define IDC_CMDBAR                      201
 #define IDC_TREEVIEW                    202
 #define IDC_EDITPAGE                    203
@@ -54,13 +53,14 @@
 #define IDM_TOOLS_OPTIONS               40020
 #define IDM_HELP_ABOUT                  40021
 #define IDM_EDIT_CLEAR                  40022
+#define IDM_FILE_NEWWS                  40023
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         40023
+#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_COMMAND_VALUE         40024
 #define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           105
 #endif

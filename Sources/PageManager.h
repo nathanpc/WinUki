@@ -11,6 +11,7 @@
 #include <windows.h>
 
 // Initialization.
+void ClearPageToDefaults();
 BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 						HMENU hPageEditID, HMENU hPageViewID);
 
@@ -20,7 +21,6 @@ LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 							  LPARAM lParam);
 
 // Population.
-BOOL ShowWelcomePage();
 BOOL PopulatePageViewArticle(const size_t nIndex);
 BOOL PopulatePageViewTemplate(const size_t nIndex);
 
