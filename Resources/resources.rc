@@ -81,22 +81,22 @@ BEGIN
     BEGIN
         POPUP "&New"
         BEGIN
-            MENUITEM "&Article...",                 IDM_FILE_ARTICLE, GRAYED
-            MENUITEM "&Template...",                IDM_FILE_TEMPLATE
+            MENUITEM "&Article...",                 IDM_FILE_NEWARTICLE
             , GRAYED
-            MENUITEM SEPARATOR
-            MENUITEM "&Workspace...",               IDM_FILE_NEWWS
+            MENUITEM "&Template...",                IDM_FILE_NEWTEMPLATE
+            , GRAYED
         END
         MENUITEM "&Open Workspace...",          IDM_FILE_OPENWS
         MENUITEM SEPARATOR
         MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
         MENUITEM "Save As...",                  IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "&Close",                      IDM_FILE_CLOSE
+        MENUITEM "Close &Workspace",            IDM_FILE_CLOSEWS
+        MENUITEM "&Quit",                       IDM_FILE_CLOSE
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "&Undo",                       IDM_EDIT_UNDO
+        MENUITEM "&Undo",                       IDM_EDIT_UNDO, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Cu&t",                        IDM_EDIT_CUT
         MENUITEM "&Copy",                       IDM_EDIT_COPY

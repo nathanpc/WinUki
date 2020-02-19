@@ -10,6 +10,10 @@
 
 #include <windows.h>
 
+// State check.
+BOOL IsArticleLoaded();
+BOOL IsTemplateLoaded();
+
 // Initialization.
 void ClearPageToDefaults();
 BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
@@ -29,6 +33,9 @@ BOOL IsPageEditorActive();
 void ShowPageViewer();
 void ShowPageEditor();
 void TogglePageView();
+
+// Saving.
+LRESULT SaveCurrentPage();
 
 // Handle getters.
 HWND GetPageEditHandle();

@@ -16,8 +16,11 @@ HINSTANCE hInst;
 HINSTANCE hinstHTML;
 HWND hwndPageEdit;
 HWND hwndPageView;
+UKIARTICLE ukiOpenArticle;
+UKITEMPLATE ukiOpenTemplate;
 
 // Private methods.
+void ClearUkiState();
 BOOL ShowWelcomePage();
 
 /**
@@ -102,11 +105,13 @@ LRESULT PageEditHandleCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 BOOL PopulatePageViewArticle(const size_t nIndex) {
 	TCHAR szPath[UKI_MAX_PATH];
 	LPTSTR szFileContents;
-	UKIARTICLE ukiArticle;
+
+	// Clear our Uki state.
+	ClearUkiState();
 
 	// Get article and file contents.
-	GetUkiArticle(&ukiArticle, nIndex);
-	GetUkiArticlePath(szPath, ukiArticle);
+	GetUkiArticle(&ukiOpenArticle, nIndex);
+	GetUkiArticlePath(szPath, ukiOpenArticle);
 	ReadFileContents(szPath, &szFileContents);
 
 	// Set contents.
@@ -130,11 +135,13 @@ BOOL PopulatePageViewArticle(const size_t nIndex) {
 BOOL PopulatePageViewTemplate(const size_t nIndex) {
 	TCHAR szPath[UKI_MAX_PATH];
 	LPTSTR szFileContents;
-	UKITEMPLATE ukiTemplate;
+
+	// Clear our Uki state.
+	ClearUkiState();
 
 	// Get template and file contents.
-	GetUkiTemplate(&ukiTemplate, nIndex);
-	GetUkiTemplatePath(szPath, ukiTemplate);
+	GetUkiTemplate(&ukiOpenTemplate, nIndex);
+	GetUkiTemplatePath(szPath, ukiOpenTemplate);
 	ReadFileContents(szPath, &szFileContents);
 
 	// Set contents.
@@ -145,18 +152,6 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
 
 	// Free the file contents buffer.
 	LocalFree(szFileContents);
-
-	return TRUE;
-}
-
-/**
- * Shows a nice welcome page in the page viewer.
- *
- * @return TRUE if the operation was successful.
- */
-BOOL ShowWelcomePage() {
-	// TODO: Load a static folder with the assets from the program root.
-    SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
 
 	return TRUE;
 }
@@ -189,6 +184,73 @@ void ShowPageViewer() {
 }
 
 /**
+ * Saves the currently open page.
+ *
+ * @return 0 if the operation was successful.
+ */
+LRESULT SaveCurrentPage() {
+	LPTSTR szContents;
+	LONG nTextLen;
+	BOOL bSuccess = FALSE;
+	
+	// Allocate memory and load contents from the page editor control.
+	nTextLen = SendMessage(hwndPageEdit, WM_GETTEXTLENGTH, 0, 0) + 1;
+	szContents = (LPTSTR)LocalAlloc(LMEM_FIXED, (nTextLen + 1) * sizeof(TCHAR));
+	SendMessage(hwndPageEdit, WM_GETTEXT, (WPARAM)nTextLen, (LPARAM)szContents);
+
+	// Save article or template.
+	if (IsArticleLoaded()) {
+		bSuccess = SaveUkiArticle(ukiOpenArticle, szContents);
+	} else if (IsTemplateLoaded()) {
+		bSuccess = SaveUkiTemplate(ukiOpenTemplate, szContents);
+	}
+
+	LocalFree(szContents);
+	return (LRESULT)(!bSuccess);
+}
+
+/**
+ * Shows a nice welcome page in the page viewer.
+ *
+ * @return TRUE if the operation was successful.
+ */
+BOOL ShowWelcomePage() {
+	// TODO: Load a static folder with the assets from the program root.
+    SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
+
+	return TRUE;
+}
+
+/**
+ * Clears the internal Uki state of the module.
+ */
+void ClearUkiState() {
+	// Clear article.
+	ukiOpenArticle.path = NULL;
+	ukiOpenArticle.name = NULL;
+	ukiOpenArticle.parent = NULL;
+	ukiOpenArticle.deepness = 0;
+
+	// Clear template.
+	ukiOpenTemplate.path = NULL;
+	ukiOpenTemplate.name = NULL;
+	ukiOpenTemplate.parent = NULL;
+	ukiOpenTemplate.deepness = 0;
+}
+
+/**
+ * Clears the page viewer and editor to its defaults.
+ */
+void ClearPageToDefaults() {
+	// Clear controls.
+	ShowWelcomePage();
+	SendMessage(hwndPageEdit, WM_SETTEXT, 0, (LPARAM)L"");
+
+	// Clear internal state.
+	ClearUkiState();
+}
+
+/**
  * Shows the page editor control.
  */
 void ShowPageEditor() {
@@ -205,14 +267,6 @@ void TogglePageView() {
 	} else {
 		ShowPageEditor();
 	}
-}
-
-/**
- * Clears the page viewer and editor to its defaults.
- */
-void ClearPageToDefaults() {
-	ShowWelcomePage();
-	SendMessage(hwndPageEdit, WM_SETTEXT, 0, (LPARAM)L"");
 }
 
 /**
@@ -240,4 +294,22 @@ HWND GetPageEditHandle() {
  */
 HWND GetPageViewHandle() {
 	return hwndPageView;
+}
+
+/**
+ * Checks if there's currently an article loaded on the screen.
+ *
+ * @return TRUE if there is.
+ */
+BOOL IsArticleLoaded() {
+	return ukiOpenArticle.name != NULL;
+}
+
+/**
+ * Checks if there's currently a template loaded on the screen.
+ *
+ * @return TRUE if there is.
+ */
+BOOL IsTemplateLoaded() {
+	return ukiOpenTemplate.name != NULL;
 }

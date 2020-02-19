@@ -37,6 +37,48 @@ BOOL InitializeUki(LPCTSTR szWikiPath) {
 }
 
 /**
+ * Saves a Uki article to its file.
+ *
+ * @param  ukiArticle Uki article to be saved.
+ * @param  szContents New contents to be placed in the article file.
+ * @return            TRUE if the operation was successful.
+ */
+BOOL SaveUkiArticle(const UKIARTICLE ukiArticle, LPCTSTR szContents) {
+	TCHAR szPath[UKI_MAX_PATH];
+
+	// Get the article path.
+	if (!GetUkiArticlePath(szPath, ukiArticle)) {
+		MessageBox(NULL, L"Failed to get the article path.",
+			L"Save Article Error", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+
+	// Write the contents to the file.
+	return SaveFileContents(szPath, szContents);
+}
+
+/**
+ * Saves a Uki template to its file.
+ *
+ * @param  ukiTemplate Uki template to be saved.
+ * @param  szContents  New contents to be placed in the template file.
+ * @return             TRUE if the operation was successful.
+ */
+BOOL SaveUkiTemplate(const UKITEMPLATE ukiTemplate, LPCTSTR szContents) {
+	TCHAR szPath[UKI_MAX_PATH];
+
+	// Get the template path.
+	if (!GetUkiTemplatePath(szPath, ukiTemplate)) {
+		MessageBox(NULL, L"Failed to get the template path.",
+			L"Save Template Error", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+
+	// Write the contents to the file.
+	return SaveFileContents(szPath, szContents);
+}
+
+/**
  * Grabs a Uki wiki root path from the manifest path.
  *
  * @param  szWikiRoot     Pre-allocated string to store the wiki root path.

@@ -33,8 +33,8 @@
 #define IDC_RADIOFINDDOWN               1006
 #define IDC_RADIOFINDANY                1007
 #define IDC_CHECKMATCHCASE              1008
-#define IDM_FILE_ARTICLE                40001
-#define IDM_FILE_TEMPLATE               40002
+#define IDM_FILE_NEWARTICLE             40001
+#define IDM_FILE_NEWTEMPLATE            40002
 #define IDM_FILE_OPENWS                 40003
 #define IDM_FILE_SAVE                   40004
 #define IDM_FILE_SAVEAS                 40005
@@ -49,18 +49,18 @@
 #define IDM_EDIT_REPLACE                40016
 #define IDM_VIEW_PAGEVIEW               40017
 #define IDM_VIEW_PAGEEDIT               40018
-#define IDM_VIEW_FONT                   40019
 #define IDM_TOOLS_OPTIONS               40020
 #define IDM_HELP_ABOUT                  40021
 #define IDM_EDIT_CLEAR                  40022
 #define IDM_FILE_NEWWS                  40023
+#define IDM_FILE_CLOSEWS                40024
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
-#define _APS_NEXT_COMMAND_VALUE         40024
+#define _APS_NEXT_COMMAND_VALUE         40025
 #define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           105
 #endif

@@ -31,6 +31,10 @@ BOOL GetUkiArticle(UKIARTICLE *ukiArticle, size_t nIndex);
 BOOL GetUkiArticlePath(LPTSTR szArticlePath, const UKIARTICLE ukiArticle);
 BOOL GetUkiTemplatePath(LPTSTR szTemplatePath, const UKITEMPLATE ukiTemplate);
 
+// Saving.
+BOOL SaveUkiArticle(const UKIARTICLE ukiArticle, LPCTSTR szContents);
+BOOL SaveUkiTemplate(const UKITEMPLATE ukiTemplate, LPCTSTR szContents);
+
 // Debugging.
 int TestInitializeUki(const char *szaWikiPath, const char *szaWikiPage);
 

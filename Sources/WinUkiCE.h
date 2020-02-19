@@ -17,6 +17,7 @@ HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 int TerminateInstance(HINSTANCE hInstance, int nDefRC);
 
 // Uki workspace.
+LRESULT CloseWorkspace();
 LRESULT LoadWorkspace();
 
 // Control managers.

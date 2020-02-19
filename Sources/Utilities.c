@@ -22,7 +22,7 @@ BOOL ReadFileContents(LPCTSTR szPath, LPTSTR *szFileContents) {
 	DWORD dwFileSize;
 	DWORD dwBytesRead;
 	HANDLE hFile;
-	BOOL bStatus = TRUE;
+	BOOL bSuccess = TRUE;
 	char *szaBuffer;
 	
 	// Open the file.
@@ -44,12 +44,11 @@ BOOL ReadFileContents(LPCTSTR szPath, LPTSTR *szFileContents) {
 	szaBuffer = (char*)LocalAlloc(LMEM_FIXED, (dwFileSize + 1) * sizeof(char));
 	
 	// Read the file into the buffer.
-	if (!ReadFile(hFile, szaBuffer, dwFileSize, &dwBytesRead,
-		NULL)) {
+	if (!ReadFile(hFile, szaBuffer, dwFileSize, &dwBytesRead, NULL)) {
 		// TODO: Use GetLastError.
 		MessageBox(NULL, L"Failed to read the contents of the file.",
 			L"Read File Error", MB_OK | MB_ICONERROR);
-		bStatus = FALSE;
+		bSuccess = FALSE;
 	}
 
 	// Terminate the buffer and convert it.
@@ -59,14 +58,66 @@ BOOL ReadFileContents(LPCTSTR szPath, LPTSTR *szFileContents) {
 			L"Conversion Failed", MB_OK | MB_ICONERROR);
 
 		LocalFree(*szFileContents);
-		bStatus = FALSE;
+		bSuccess = FALSE;
 	}
     
 	// Clean up.
 	CloseHandle(hFile);
 	LocalFree(szaBuffer);
 
-	return bStatus;
+	return bSuccess;
+}
+
+/**
+ * Save contents to a file.
+ *
+ * @param  szFilePath Path to the file to be overwritten.
+ * @param  szContents Contents to place inside the file.
+ * @return            TRUE if the operation was successful.
+ */
+BOOL SaveFileContents(LPCTSTR szFilePath, LPCTSTR szContents) {
+    HANDLE hFile;
+	DWORD dwTextLength;
+	DWORD dwBytesWritten;
+	char *szaBuffer;
+
+	// Get text length.
+	dwTextLength = wcslen(szContents);
+
+	// Open file for writing.
+    hFile = CreateFile(szFilePath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL,
+        CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile == INVALID_HANDLE_VALUE) {
+		// TODO: Use GetLastError.
+		MessageBox(NULL, L"Couldn't open file to write contents.",
+			L"Write File Error", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+
+	// Convert text to ASCII before writing to the file.
+	szaBuffer = (char*)LocalAlloc(LMEM_FIXED, (dwTextLength + 1) * sizeof(char));
+	if (!ConvertStringWtoA(szaBuffer, szContents)) {
+		MessageBox(NULL, L"Failed to convert contents buffer from Unicode to "
+			L"ASCII.", L"Conversion Failed", MB_OK | MB_ICONERROR);
+
+		CloseHandle(hFile);
+		LocalFree(szaBuffer);
+		return FALSE;
+	}
+
+	// Write to the file.
+	if (!WriteFile(hFile, szaBuffer, dwTextLength, &dwBytesWritten, NULL)) {
+		// TODO: Use GetLastError.
+		MessageBox(NULL, L"Couldn't write contents to file.",
+			L"Write File Error", MB_OK | MB_ICONERROR);
+		return FALSE;
+	}
+	
+	// Clean up.
+	CloseHandle(hFile);
+	LocalFree(szaBuffer);
+
+    return TRUE;
 }
 
 /**

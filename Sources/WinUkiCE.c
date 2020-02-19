@@ -22,6 +22,7 @@
 // Global variables.
 HINSTANCE hInst;
 int uki_error;
+BOOL fWorkspaceOpen;
 
 /**
  * Application's main entry point.
@@ -37,6 +38,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	MSG msg;
 	HWND hwndMain;
 	int rc;
+
+	// Set flags.
+	fWorkspaceOpen = FALSE;
 
 	// Initialize the application.
 	rc = InitializeApplication(hInstance);
@@ -59,6 +63,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 /**
+ * Closes a Uki workspace.
+ *
+ * @return 0 if a workspace was closed.
+ */
+LRESULT CloseWorkspace() {
+	// Set all controls to its defaults.
+	TreeViewClear();
+	ClearPageToDefaults();
+
+	// Close Uki.
+	CloseUki();
+
+	fWorkspaceOpen = FALSE;
+	return 0;
+}
+
+/**
  * Loads a Uki workspace.
  *
  * @return 0 if a workspace was loaded.
@@ -70,17 +91,16 @@ LRESULT LoadWorkspace() {
 	if (!OpenWorkspace(szWikiPath))
 		return 1;
 
-	// Set all controls to its defaults.
-	ClearPageToDefaults();
-	TreeViewClear();
+	// Close the current workspace.
+	CloseWorkspace();
 
 	// Initialize Uki.
-	CloseUki();
 	InitializeUki(szWikiPath);
 
 	// Populate the TreeView with stuff.
 	PopulateTreeView();
 
+	fWorkspaceOpen = TRUE;
 	return 0;
 }
 
@@ -435,6 +455,26 @@ LRESULT WndMainInitMenuPopUp(HWND hWnd, UINT wMsg, WPARAM wParam,
 		EnableMenuItem(hMenu, IDM_EDIT_FINDNEXT, MF_BYCOMMAND | MF_GRAYED);
 	}
 
+	// Enable and disable workspace related items.
+	if (fWorkspaceOpen) {
+		EnableMenuItem(hMenu, IDM_FILE_NEWARTICLE, MF_BYCOMMAND | MF_ENABLED);
+		EnableMenuItem(hMenu, IDM_FILE_NEWTEMPLATE, MF_BYCOMMAND | MF_ENABLED);
+		EnableMenuItem(hMenu, IDM_FILE_CLOSEWS, MF_BYCOMMAND | MF_ENABLED);
+	} else {
+		EnableMenuItem(hMenu, IDM_FILE_NEWARTICLE, MF_BYCOMMAND | MF_GRAYED);
+		EnableMenuItem(hMenu, IDM_FILE_NEWTEMPLATE, MF_BYCOMMAND | MF_GRAYED);
+		EnableMenuItem(hMenu, IDM_FILE_CLOSEWS, MF_BYCOMMAND | MF_GRAYED);
+	}
+
+	// Enable/disable article related items.
+	if (IsArticleLoaded() || IsTemplateLoaded()) {
+		EnableMenuItem(hMenu, IDM_FILE_SAVE, MF_BYCOMMAND | MF_ENABLED);
+		EnableMenuItem(hMenu, IDM_FILE_SAVEAS, MF_BYCOMMAND | MF_ENABLED);
+	} else {
+		EnableMenuItem(hMenu, IDM_FILE_SAVE, MF_BYCOMMAND | MF_GRAYED);
+		EnableMenuItem(hMenu, IDM_FILE_SAVEAS, MF_BYCOMMAND | MF_GRAYED);
+	}
+
 	return 0;
 }
 
@@ -456,6 +496,12 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDM_FILE_OPENWS:
 		// Open Workspace.
 		return LoadWorkspace();
+	case IDM_FILE_SAVE:
+		// Save.
+		return SaveCurrentPage();
+	case IDM_FILE_CLOSEWS:
+		// Close Workspace.
+		return CloseWorkspace();
 	case IDM_FILE_CLOSE:
 		// Close.
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);
@@ -578,6 +624,9 @@ LRESULT WndMainActivate(HWND hWnd, UINT wMsg, WPARAM wParam,
  */
 LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
 					 LPARAM lParam) {
+	// Clean up.
+	CloseWorkspace();
+
 	// Send window destruction message.
 	DestroyWindow(hWnd);
 
@@ -595,9 +644,6 @@ LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
  */
 LRESULT WndMainDestroy(HWND hWnd, UINT wMsg, WPARAM wParam,
 					   LPARAM lParam) {
-	// Clean up.
-	CloseUki();
-
 	// Post quit message and return.
 	PostQuitMessage(0);
 	return 0;
