@@ -211,6 +211,57 @@ LRESULT SaveCurrentPage() {
 }
 
 /**
+ * Creates a new page with the contents empty.
+ * @remark Remember to refresh the TreeView after this.
+ *
+ * @param  fIsArticle Is this new page an article?
+ * @return            0 if the operation was successful.
+ */
+LRESULT CreateNewPage(BOOL fIsArticle) {
+	TCHAR szPath[MAX_PATH];
+	LONG nIndex;
+
+	// Get the file name.
+	if (fIsArticle) {
+		if (!SaveNewPage(szPath, L"New Article"))
+			return 1;
+	} else {
+		if (!SaveNewPage(szPath, L"New Template"))
+			return 1;
+	}
+
+	// Add the file to the engine.
+	if (fIsArticle) {
+		// Add article.
+		nIndex = AddUkiArticle(szPath);
+		if (nIndex < 0L)
+			return 1;
+
+		// Set current open article.
+		ClearUkiState();
+		GetUkiArticle(&ukiOpenArticle, nIndex);
+	} else {
+		// Add template.
+		nIndex = AddUkiTemplate(szPath);
+		if (nIndex < 0L)
+			return 1;
+
+		// Set current open template.
+		ClearUkiState();
+		GetUkiTemplate(&ukiOpenTemplate, nIndex);
+	}
+
+	// Clear the editor contents.
+	SendMessage(hwndPageEdit, WM_SETTEXT, 0, (LPARAM)L" ");
+
+	// Save the new page.
+	if (SaveCurrentPage())
+		return 1;
+
+	return 0;
+}
+
+/**
  * Saves a new page with the contents of the current opened one in a new file.
  * @remark Remember to refresh the TreeView after this.
  *
@@ -221,8 +272,15 @@ LRESULT SavePageAs() {
 	LONG nIndex;
 
 	// Get the file name.
-	if (!SaveNewPage(szPath, L"Save As"))
+	if (IsArticleLoaded()) {
+		if (!SaveNewPage(szPath, L"Save Article As"))
+			return 1;
+	} else if (IsTemplateLoaded()) {
+		if (!SaveNewPage(szPath, L"Save Template As"))
+			return 1;
+	} else {
 		return 1;
+	}
 
 	// Add the file to the engine.
 	if (IsArticleLoaded()) {
@@ -245,7 +303,7 @@ LRESULT SavePageAs() {
 		GetUkiTemplate(&ukiOpenTemplate, nIndex);
 	}
 
-	// Save the new page.
+	// Save the page as another one.
 	if (SaveCurrentPage())
 		return 1;
 

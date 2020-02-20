@@ -67,6 +67,7 @@ BOOL OpenWorkspace(LPTSTR szWikiRoot) {
  */
 BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle) {
 	OPENFILENAME ofn = {0};
+	szFilePath[0] = L'\0';
 
 	// Populate the structure.
     ofn.lStructSize = sizeof(ofn);

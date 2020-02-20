@@ -495,6 +495,16 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDC_EDITPAGE:
 		// Page Editor.
 		return PageEditHandleCommand(hWnd, wMsg, wParam, lParam);
+	case IDM_FILE_NEWARTICLE:
+		// New Article.
+		if (CreateNewPage(TRUE))
+			return 1;
+		return PopulateTreeView();
+	case IDM_FILE_NEWTEMPLATE:
+		// New Template.
+		if (CreateNewPage(FALSE))
+			return 1;
+		return PopulateTreeView();
 	case IDM_FILE_OPENWS:
 		// Open Workspace.
 		return LoadWorkspace();

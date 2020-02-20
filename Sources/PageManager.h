@@ -36,6 +36,7 @@ void TogglePageView();
 
 // Saving.
 LRESULT SaveCurrentPage();
+LRESULT CreateNewPage(BOOL fIsArticle);
 LRESULT SavePageAs();
 
 // Handle getters.
