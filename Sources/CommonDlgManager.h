@@ -13,7 +13,8 @@
 // Initialization.
 BOOL InitializeCommonDialogs(HINSTANCE hParentInst, HWND hParentWindow);
 
-// Open dialogs.
+// Dialogs.
 BOOL OpenWorkspace(LPTSTR szWikiRoot);
+BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle);
 
 #endif  // _COMMONDLGMANAGER_H

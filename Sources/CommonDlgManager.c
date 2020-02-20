@@ -30,7 +30,7 @@ BOOL InitializeCommonDialogs(HINSTANCE hParentInst, HWND hParentWindow) {
 }
 
 /**
- * Opens a Uki wiki root.
+ * Opens a "Open Uki wiki root" dialog.
  *
  * @param  szWikiRoot Pre-allocated string to store the wiki root path.
  * @return            TRUE if we actually opened something.
@@ -56,4 +56,29 @@ BOOL OpenWorkspace(LPTSTR szWikiRoot) {
 
 	// Get the wiki root and return
 	return GetUkiRootFromManifest(szWikiRoot, szManifestPath);
+}
+
+/**
+ * Opens a "New/Save As template/article" dialog.
+ *
+ * @param  szFilePath    Pre-allocated string to store the wiki root path.
+ * @param  szDialogTitle String containing the save dialog title.
+ * @return               TRUE if the user actually selected a file to be saved.
+ */
+BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle) {
+	OPENFILENAME ofn = {0};
+
+	// Populate the structure.
+    ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrTitle = szDialogTitle;
+    ofn.hwndOwner = hwndParent;
+    ofn.lpstrFilter = L"HTML File (*.html)\0*.html\0All Files (*.*)\0*.*\0";
+    ofn.lpstrFile = szFilePath;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+    ofn.lpstrDefExt = L"html";
+	ofn.lpstrInitialDir = GetCurrentWorkspace();
+
+	// Open the file dialog.
+	return GetSaveFileName(&ofn);
 }

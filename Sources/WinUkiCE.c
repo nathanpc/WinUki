@@ -184,6 +184,9 @@ LRESULT PopulateTreeView() {
 	HTREEITEM htiTemplates;
 	WCHAR szCaption[LBL_MAX_LEN];
 
+	// Clear the TreeView as a precaution.
+	TreeViewClear();
+
 	// Add article library root item.
 	LoadString(hInst, IDS_ARTICLE_LIBRARY, szCaption, LBL_MAX_LEN);
 	htiArticles = TreeViewAddItem((HTREEITEM)NULL, szCaption,
@@ -199,7 +202,6 @@ LRESULT PopulateTreeView() {
 
 	// Populate the templates.
 	PopulateTemplates(htiTemplates, 0, 0, TRUE);
-
 
 	// Expand the view.
 	TreeViewExpandNode(htiArticles);
@@ -499,6 +501,11 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDM_FILE_SAVE:
 		// Save.
 		return SaveCurrentPage();
+	case IDM_FILE_SAVEAS:
+		// Save As.
+		if (SavePageAs())
+			return 1;
+		return PopulateTreeView();
 	case IDM_FILE_CLOSEWS:
 		// Close Workspace.
 		return CloseWorkspace();

@@ -16,6 +16,7 @@ BOOL ConvertStringWtoA(char *szASCII, LPCTSTR szUnicode);
 
 // File utilities.
 BOOL ReadFileContents(LPCTSTR szPath, LPTSTR *szFileContents);
+BOOL SaveFileContents(LPCTSTR szFilePath, LPCTSTR szContents);
 
 // Debugging.
 void PrintDebugConsole(const char* format, ...);

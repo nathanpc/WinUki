@@ -36,6 +36,7 @@ void TogglePageView();
 
 // Saving.
 LRESULT SaveCurrentPage();
+LRESULT SavePageAs();
 
 // Handle getters.
 HWND GetPageEditHandle();

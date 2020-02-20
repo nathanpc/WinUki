@@ -8,6 +8,9 @@
 #include "UkiHelper.h"
 #include "Utilities.h"
 
+// Global variables.
+LPTSTR szCurrentWikiRoot[MAX_PATH];
+
 /**
  * Initializes the Uki engine.
  *
@@ -20,6 +23,9 @@ BOOL InitializeUki(LPCTSTR szWikiPath) {
 
 	// Convert Unicode string to ASCII.
 	if (ConvertStringWtoA(szaPath, szWikiPath)) {
+		// Save our current wiki path.
+		wcscpy(szCurrentWikiRoot, szWikiPath);
+
 		// Initialize the engine.
 		if ((err = uki_initialize(szaPath)) != UKI_OK) {
 			ShowUkiErrorDialog(err);
@@ -193,6 +199,75 @@ BOOL GetUkiArticle(UKIARTICLE *ukiArticle, size_t nIndex) {
 BOOL GetUkiTemplate(UKITEMPLATE *ukiTemplate, size_t nIndex) {
 	*ukiTemplate = uki_template(nIndex);
 	return ukiTemplate->name != NULL;
+}
+
+/**
+ * Gets the number of articles available.
+ *
+ * @return Number of articles available.
+ */
+LONG GetUkiArticlesAvailable() {
+	return (LONG)uki_articles_available();
+}
+
+/**
+ * Gets the number of templates available.
+ *
+ * @return Number of templates available.
+ */
+LONG GetUkiTemplatesAvailable() {
+	return (LONG)uki_templates_available();
+}
+
+/**
+ * Adds an article to the Uki workspace.
+ *
+ * @param  szFilePath Full path to the article.
+ * @return            The index of the article added or -1 in case of error.
+ */
+LONG AddUkiArticle(LPCTSTR szFilePath) {
+	char szaPath[UKI_MAX_PATH];
+
+	// Convert Unicode string to ASCII.
+	if (!ConvertStringWtoA(szaPath, szFilePath)) {
+		MessageBox(NULL, L"Failed to convert the article path from ASCII to "
+			L"Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		return -1L;
+	}
+
+	// Add article and return its index.
+	uki_add_article(szaPath);
+	return GetUkiArticlesAvailable() - 1;
+}
+
+/**
+ * Adds a template to the Uki workspace.
+ *
+ * @param  szFilePath Full path to the template.
+ * @return            The index of the template added or -1 in case of error.
+ */
+LONG AddUkiTemplate(LPCTSTR szFilePath) {
+	char szaPath[UKI_MAX_PATH];
+
+	// Convert Unicode string to ASCII.
+	if (!ConvertStringWtoA(szaPath, szFilePath)) {
+		MessageBox(NULL, L"Failed to convert the template path from ASCII to "
+			L"Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		return -1L;
+	}
+
+	// Add template and return its index.
+	uki_add_template(szaPath);
+	return GetUkiTemplatesAvailable() - 1;
+}
+
+/**
+ * Gets the currently open Uki workspace path.
+ *
+ * @return Path to the current workspace.
+ */
+LPTSTR GetCurrentWorkspace() {
+	return szCurrentWikiRoot;
 }
 
 /**

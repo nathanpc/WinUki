@@ -26,10 +26,17 @@ void CloseUki();
 BOOL InitializeUki(LPCTSTR szWikiPath);
 
 // Lookup.
+LPTSTR GetCurrentWorkspace();
+LONG GetUkiArticlesAvailable();
+LONG GetUkiTemplatesAvailable();
 BOOL GetUkiTemplate(UKITEMPLATE *ukiTemplate, size_t nIndex);
 BOOL GetUkiArticle(UKIARTICLE *ukiArticle, size_t nIndex);
 BOOL GetUkiArticlePath(LPTSTR szArticlePath, const UKIARTICLE ukiArticle);
 BOOL GetUkiTemplatePath(LPTSTR szTemplatePath, const UKITEMPLATE ukiTemplate);
+
+// Asset management.
+LONG AddUkiArticle(LPCTSTR szFilePath);
+LONG AddUkiTemplate(LPCTSTR szFilePath);
 
 // Saving.
 BOOL SaveUkiArticle(const UKIARTICLE ukiArticle, LPCTSTR szContents);

@@ -7,6 +7,7 @@
 
 #include <htmlctrl.h>
 #include "PageManager.h"
+#include "CommonDlgManager.h"
 #include "UkiHelper.h"
 #include "Utilities.h"
 #include "resource.h"
@@ -207,6 +208,48 @@ LRESULT SaveCurrentPage() {
 
 	LocalFree(szContents);
 	return (LRESULT)(!bSuccess);
+}
+
+/**
+ * Saves a new page with the contents of the current opened one in a new file.
+ * @remark Remember to refresh the TreeView after this.
+ *
+ * @return 0 if the operation was successful.
+ */
+LRESULT SavePageAs() {
+	TCHAR szPath[MAX_PATH];
+	LONG nIndex;
+
+	// Get the file name.
+	if (!SaveNewPage(szPath, L"Save As"))
+		return 1;
+
+	// Add the file to the engine.
+	if (IsArticleLoaded()) {
+		// Add article.
+		nIndex = AddUkiArticle(szPath);
+		if (nIndex < 0L)
+			return 1;
+
+		// Set current open article.
+		ClearUkiState();
+		GetUkiArticle(&ukiOpenArticle, nIndex);
+	} else if (IsTemplateLoaded()) {
+		// Add template.
+		nIndex = AddUkiTemplate(szPath);
+		if (nIndex < 0L)
+			return 1;
+
+		// Set current open template.
+		ClearUkiState();
+		GetUkiTemplate(&ukiOpenTemplate, nIndex);
+	}
+
+	// Save the new page.
+	if (SaveCurrentPage())
+		return 1;
+
+	return 0;
 }
 
 /**
