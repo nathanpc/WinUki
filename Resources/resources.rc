@@ -81,39 +81,41 @@ BEGIN
     BEGIN
         POPUP "&New"
         BEGIN
-            MENUITEM "&Article...",                 IDM_FILE_NEWARTICLE
+            MENUITEM "&Article...\tCtrl+N",         IDM_FILE_NEWARTICLE
             , GRAYED
             MENUITEM "&Template...",                IDM_FILE_NEWTEMPLATE
             , GRAYED
         END
         MENUITEM SEPARATOR
-        MENUITEM "&Open Workspace...",          IDM_FILE_OPENWS
+        MENUITEM "&Open Workspace...\tCtrl+O",  IDM_FILE_OPENWS
         MENUITEM "&Refresh Workspace",          IDM_FILE_REFRESHWS
-        MENUITEM "&Close Workspace",            IDM_FILE_CLOSEWS
+        MENUITEM "&Close Workspace\tCtrl+W",    IDM_FILE_CLOSEWS
         MENUITEM SEPARATOR
-        MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
+        MENUITEM "&Save\t Ctrl+S",              IDM_FILE_SAVE, GRAYED
         MENUITEM "Save As...",                  IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "&Quit",                       IDM_FILE_CLOSE
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "&Undo",                       IDM_EDIT_UNDO, GRAYED
+        MENUITEM "&Undo\tCtrl+Z",               IDM_EDIT_UNDO, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Cu&t",                        IDM_EDIT_CUT
-        MENUITEM "&Copy",                       IDM_EDIT_COPY
-        MENUITEM "&Paste",                      IDM_EDIT_PASTE
+        MENUITEM "Cu&t\tCtrl+X",                IDM_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               IDM_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE
         MENUITEM "Cle&ar",                      IDM_EDIT_CLEAR
-        MENUITEM "Select A&ll",                 IDM_EDIT_SELECTALL
+        MENUITEM "Select A&ll\tCtrl+A",         IDM_EDIT_SELECTALL
         MENUITEM SEPARATOR
-        MENUITEM "&Find...",                    IDM_EDIT_FIND
-        MENUITEM "Find &Next",                  IDM_EDIT_FINDNEXT, GRAYED
-        MENUITEM "&Replace...",                 IDM_EDIT_REPLACE
+        MENUITEM "&Find...\tCtrl+F",            IDM_EDIT_FIND
+        MENUITEM "Find &Next\tF3",              IDM_EDIT_FINDNEXT, GRAYED
+        MENUITEM "&Replace...\tCtrl+H",         IDM_EDIT_REPLACE
     END
     POPUP "&View"
     BEGIN
         MENUITEM "Page &View",                  IDM_VIEW_PAGEVIEW, CHECKED
         MENUITEM "Page &Edit",                  IDM_VIEW_PAGEEDIT
+        MENUITEM SEPARATOR
+        MENUITEM "&Toggle Page View\tCtrl+D",   IDM_VIEW_TOGGLEPAGE
     END
     POPUP "&Help"
     BEGIN
@@ -209,6 +211,29 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCEL ACCELERATORS DISCARDABLE 
+BEGIN
+    "A",            IDM_EDIT_SELECTALL,     VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "D",            IDM_VIEW_TOGGLEPAGE,    VIRTKEY, CONTROL, NOINVERT
+    "F",            IDM_EDIT_FIND,          VIRTKEY, CONTROL, NOINVERT
+    "H",            IDM_EDIT_REPLACE,       VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_FILE_NEWARTICLE,    VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPENWS,        VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          IDM_EDIT_FINDNEXT,      VIRTKEY, NOINVERT
+    "W",            IDM_FILE_CLOSEWS,       VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

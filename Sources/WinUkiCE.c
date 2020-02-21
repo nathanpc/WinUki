@@ -38,6 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				   LPWSTR lpCmdLine, int nShowCmd) {
 	MSG msg;
 	HWND hwndMain;
+	HACCEL hAccel;
 	int rc;
 
 	// Set flags.
@@ -53,10 +54,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if (hwndMain == 0)
 		return 0x10;
 
+	// Load accelerators.
+	hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCEL));
+
 	// Application message loop.
 	while (GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		// Translate accelerators.
+		if (!TranslateAccelerator(hwndMain, hAccel, &msg)) {
+			// Translate message.
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 
 	// Clean up.
@@ -580,6 +588,10 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDM_VIEW_PAGEEDIT:
 		// Show Page Editor.
 		ShowPageEditor();
+		break;
+	case IDM_VIEW_TOGGLEPAGE:
+		// Toggle Page View.
+		TogglePageView();
 		break;
 	case IDM_HELP_ABOUT:
 		// About.
