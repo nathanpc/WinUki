@@ -15,6 +15,7 @@
 #include "PageManager.h"
 #include "FindReplace.h"
 #include "CommonDlgManager.h"
+#include "AboutDialog.h"
 
 // Definitions.
 #define LBL_MAX_LEN 100
@@ -580,9 +581,14 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		// Show Page Editor.
 		ShowPageEditor();
 		break;
+	case IDM_HELP_ABOUT:
+		// About.
+		ShowAboutDialog(hInst, hWnd);
+		break;
 	default:
 		return DefWindowProc(hWnd, wMsg, wParam, lParam);
 	}
+
 	return 0;
 }
 

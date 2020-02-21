@@ -115,10 +115,6 @@ BEGIN
         MENUITEM "Page &View",                  IDM_VIEW_PAGEVIEW, CHECKED
         MENUITEM "Page &Edit",                  IDM_VIEW_PAGEEDIT
     END
-    POPUP "&Tools"
-    BEGIN
-        MENUITEM "&Settings...",                IDM_TOOLS_OPTIONS
-    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About...",                   IDM_HELP_ABOUT
