@@ -9,6 +9,7 @@
 #include <commdlg.h>
 #include "CommonDlgManager.h"
 #include "UkiHelper.h"
+#include "Utilities.h"
 #include "resource.h"
 
 // Global variables.
@@ -63,11 +64,22 @@ BOOL OpenWorkspace(LPTSTR szWikiRoot) {
  *
  * @param  szFilePath    Pre-allocated string to store the wiki root path.
  * @param  szDialogTitle String containing the save dialog title.
+ * @param  fIsArticle    Is this file being created an article?
  * @return               TRUE if the user actually selected a file to be saved.
  */
-BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle) {
+BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle, BOOL fIsArticle) {
+	LPCTSTR szInitialDir;
 	OPENFILENAME ofn = {0};
 	szFilePath[0] = L'\0';
+
+	// Get page folder.
+	if (fIsArticle) {
+		// Use articles path.
+		szInitialDir = GetUkiArticlesFolder();
+	} else {
+		// Use templates path.
+		szInitialDir = GetUkiTemplatesFolder();
+	}
 
 	// Populate the structure.
     ofn.lStructSize = sizeof(ofn);
@@ -78,7 +90,7 @@ BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle) {
     ofn.nMaxFile = MAX_PATH;
     ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
     ofn.lpstrDefExt = L"html";
-	ofn.lpstrInitialDir = GetCurrentWorkspace();
+	ofn.lpstrInitialDir = szInitialDir;
 
 	// Open the file dialog.
 	return GetSaveFileName(&ofn);

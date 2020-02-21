@@ -54,13 +54,14 @@
 #define IDM_EDIT_CLEAR                  40022
 #define IDM_FILE_NEWWS                  40023
 #define IDM_FILE_CLOSEWS                40024
+#define IDM_FILE_REFRESHWS              40025
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
-#define _APS_NEXT_COMMAND_VALUE         40025
+#define _APS_NEXT_COMMAND_VALUE         40026
 #define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           105
 #endif

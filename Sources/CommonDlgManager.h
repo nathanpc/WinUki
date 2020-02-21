@@ -15,6 +15,6 @@ BOOL InitializeCommonDialogs(HINSTANCE hParentInst, HWND hParentWindow);
 
 // Dialogs.
 BOOL OpenWorkspace(LPTSTR szWikiRoot);
-BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle);
+BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle, BOOL fIsArticle);
 
 #endif  // _COMMONDLGMANAGER_H

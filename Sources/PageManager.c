@@ -223,10 +223,10 @@ LRESULT CreateNewPage(BOOL fIsArticle) {
 
 	// Get the file name.
 	if (fIsArticle) {
-		if (!SaveNewPage(szPath, L"New Article"))
+		if (!SaveNewPage(szPath, L"New Article", fIsArticle))
 			return 1;
 	} else {
-		if (!SaveNewPage(szPath, L"New Template"))
+		if (!SaveNewPage(szPath, L"New Template", fIsArticle))
 			return 1;
 	}
 
@@ -273,10 +273,10 @@ LRESULT SavePageAs() {
 
 	// Get the file name.
 	if (IsArticleLoaded()) {
-		if (!SaveNewPage(szPath, L"Save Article As"))
+		if (!SaveNewPage(szPath, L"Save Article As", IsArticleLoaded()))
 			return 1;
 	} else if (IsTemplateLoaded()) {
-		if (!SaveNewPage(szPath, L"Save Template As"))
+		if (!SaveNewPage(szPath, L"Save Template As", IsArticleLoaded()))
 			return 1;
 	} else {
 		return 1;

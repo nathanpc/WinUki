@@ -34,6 +34,10 @@ BOOL GetUkiArticle(UKIARTICLE *ukiArticle, size_t nIndex);
 BOOL GetUkiArticlePath(LPTSTR szArticlePath, const UKIARTICLE ukiArticle);
 BOOL GetUkiTemplatePath(LPTSTR szTemplatePath, const UKITEMPLATE ukiTemplate);
 
+// Paths.
+LPCTSTR GetUkiArticlesFolder();
+LPCTSTR GetUkiTemplatesFolder();
+
 // Asset management.
 LONG AddUkiArticle(LPCTSTR szFilePath);
 LONG AddUkiTemplate(LPCTSTR szFilePath);

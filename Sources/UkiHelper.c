@@ -9,7 +9,9 @@
 #include "Utilities.h"
 
 // Global variables.
-LPTSTR szCurrentWikiRoot[MAX_PATH];
+TCHAR szCurrentWikiRoot[UKI_MAX_PATH];
+TCHAR szArticlesFolder[UKI_MAX_PATH];
+TCHAR szTemplatesFolder[UKI_MAX_PATH];
 
 /**
  * Initializes the Uki engine.
@@ -230,8 +232,8 @@ LONG AddUkiArticle(LPCTSTR szFilePath) {
 
 	// Convert Unicode string to ASCII.
 	if (!ConvertStringWtoA(szaPath, szFilePath)) {
-		MessageBox(NULL, L"Failed to convert the article path from ASCII to "
-			L"Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"Failed to convert the article path from Unicode "
+			L"to ASCII", L"Conversion Error", MB_OK | MB_ICONERROR);
 		return -1L;
 	}
 
@@ -251,8 +253,8 @@ LONG AddUkiTemplate(LPCTSTR szFilePath) {
 
 	// Convert Unicode string to ASCII.
 	if (!ConvertStringWtoA(szaPath, szFilePath)) {
-		MessageBox(NULL, L"Failed to convert the template path from ASCII to "
-			L"Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"Failed to convert the template path from Unicode "
+			L"to ASCII", L"Conversion Error", MB_OK | MB_ICONERROR);
 		return -1L;
 	}
 
@@ -268,6 +270,50 @@ LONG AddUkiTemplate(LPCTSTR szFilePath) {
  */
 LPTSTR GetCurrentWorkspace() {
 	return szCurrentWikiRoot;
+}
+
+/**
+ * Gets the path to the articles folder from the Uki workspace.
+ *
+ * @return Articles folder path or NULL in case of an error.
+ */
+LPCTSTR GetUkiArticlesFolder() {
+	char szaPath[UKI_MAX_PATH];
+
+	// Get the folder path.
+	if (uki_folder_articles(szaPath) != UKI_OK)
+		return NULL;
+
+	// Convert ASCII string to Unicode.
+	if (!ConvertStringAtoW(szArticlesFolder, szaPath)) {
+		MessageBox(NULL, L"Failed to convert the articles folder path from "
+			L"ASCII to Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		return NULL;
+	}
+
+	return szArticlesFolder;
+}
+
+/**
+ * Gets the path to the templates folder from the Uki workspace.
+ *
+ * @return Templates folder path or NULL in case of an error.
+ */
+LPCTSTR GetUkiTemplatesFolder() {
+	char szaPath[UKI_MAX_PATH];
+
+	// Get the folder path.
+	if (uki_folder_templates(szaPath) != UKI_OK)
+		return NULL;
+
+	// Convert ASCII string to Unicode.
+	if (!ConvertStringAtoW(szTemplatesFolder, szaPath)) {
+		MessageBox(NULL, L"Failed to convert the templates folder path from "
+			L"ASCII to Unicode", L"Conversion Error", MB_OK | MB_ICONERROR);
+		return NULL;
+	}
+
+	return szTemplatesFolder;
 }
 
 /**
