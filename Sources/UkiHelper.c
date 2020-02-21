@@ -317,6 +317,19 @@ LPCTSTR GetUkiTemplatesFolder() {
 }
 
 /**
+ * Reloads the whole thing.
+ *
+ * @return TRUE if the operation was succesful.
+ */
+BOOL ReloadUki() {
+	// Close.
+	CloseUki();
+
+	// Reinitialize.
+	return InitializeUki(szCurrentWikiRoot);
+}
+
+/**
  * Cleans our mess.
  */
 void CloseUki() {

@@ -24,6 +24,7 @@ BOOL GetUkiRootFromManifest(LPTSTR szWikiRoot, LPCTSTR szManifestPath);
 // Initialization and destruction.
 void CloseUki();
 BOOL InitializeUki(LPCTSTR szWikiPath);
+BOOL ReloadUki();
 
 // Lookup.
 LPTSTR GetCurrentWorkspace();

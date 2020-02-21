@@ -82,20 +82,33 @@ LRESULT CloseWorkspace() {
 /**
  * Loads a Uki workspace.
  *
- * @return 0 if a workspace was loaded.
+ * @param  fReload Is this a reload operation?
+ * @return         0 if a workspace was loaded.
  */
-LRESULT LoadWorkspace() {
-	TCHAR szWikiPath[MAX_PATH];
-
-	// Get the workspace folder.
-	if (!OpenWorkspace(szWikiPath))
-		return 1;
-
-	// Close the current workspace.
-	CloseWorkspace();
-
-	// Initialize Uki.
-	InitializeUki(szWikiPath);
+LRESULT LoadWorkspace(BOOL fReload) {
+	if (fReload) {
+		// Reload workspace.
+		CloseWorkspace();
+		if (!ReloadUki()) {
+			return 1;
+		}
+	} else {
+		// Open a new workspace.
+		TCHAR szWikiPath[MAX_PATH];
+		
+		// Get the workspace folder.
+		if (!OpenWorkspace(szWikiPath))
+			return 1;
+		
+		// Close the current workspace.
+		CloseWorkspace();
+		
+		// Initialize Uki.
+		if (!InitializeUki(szWikiPath)) {
+			fWorkspaceOpen = FALSE;
+			return 1;
+		}
+	}
 
 	// Populate the TreeView with stuff.
 	PopulateTreeView();
@@ -461,10 +474,12 @@ LRESULT WndMainInitMenuPopUp(HWND hWnd, UINT wMsg, WPARAM wParam,
 	if (fWorkspaceOpen) {
 		EnableMenuItem(hMenu, IDM_FILE_NEWARTICLE, MF_BYCOMMAND | MF_ENABLED);
 		EnableMenuItem(hMenu, IDM_FILE_NEWTEMPLATE, MF_BYCOMMAND | MF_ENABLED);
+		EnableMenuItem(hMenu, IDM_FILE_REFRESHWS, MF_BYCOMMAND | MF_ENABLED);
 		EnableMenuItem(hMenu, IDM_FILE_CLOSEWS, MF_BYCOMMAND | MF_ENABLED);
 	} else {
 		EnableMenuItem(hMenu, IDM_FILE_NEWARTICLE, MF_BYCOMMAND | MF_GRAYED);
 		EnableMenuItem(hMenu, IDM_FILE_NEWTEMPLATE, MF_BYCOMMAND | MF_GRAYED);
+		EnableMenuItem(hMenu, IDM_FILE_REFRESHWS, MF_BYCOMMAND | MF_GRAYED);
 		EnableMenuItem(hMenu, IDM_FILE_CLOSEWS, MF_BYCOMMAND | MF_GRAYED);
 	}
 
@@ -507,7 +522,13 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		return PopulateTreeView();
 	case IDM_FILE_OPENWS:
 		// Open Workspace.
-		return LoadWorkspace();
+		return LoadWorkspace(FALSE);
+	case IDM_FILE_REFRESHWS:
+		// Refresh Workspace.
+		return LoadWorkspace(TRUE);
+	case IDM_FILE_CLOSEWS:
+		// Close Workspace.
+		return CloseWorkspace();
 	case IDM_FILE_SAVE:
 		// Save.
 		return SaveCurrentPage();
@@ -516,9 +537,6 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		if (SavePageAs())
 			return 1;
 		return PopulateTreeView();
-	case IDM_FILE_CLOSEWS:
-		// Close Workspace.
-		return CloseWorkspace();
 	case IDM_FILE_CLOSE:
 		// Close.
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);
