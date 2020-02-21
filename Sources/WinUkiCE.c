@@ -127,6 +127,36 @@ LRESULT LoadWorkspace(BOOL fReload) {
 }
 
 /**
+ * Checks for unsaved changes and displays a message box if there are any.
+ *
+ * @return TRUE if we should abort the current operation.
+ */
+BOOL CheckForUnsavedChanges() {
+	int fSelection;
+
+	// Check for page dirtiness.
+	if (IsPageDirty()) {
+		// Show the message box and get the user selection.
+		fSelection = MessageBox(NULL, L"You have unsaved changes. Do you want "
+			L"to save your changes?", L"Unsaved Changes",
+			MB_YESNOCANCEL | MB_ICONWARNING);
+
+		// Check which button the user clicked.
+		switch (fSelection) {
+		case IDYES:
+			SaveCurrentPage();
+			return FALSE;
+		case IDNO:
+			return FALSE;
+		case IDCANCEL:
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+/**
  * Populates the Articles node in the TreeView.
  *
  * @param  htiParent     Parent TreeView node handle.
@@ -380,8 +410,14 @@ LRESULT TreeViewSelectionChanged(HWND hWnd, UINT wMsg, WPARAM wParam,
 	
 	// Check if an article or template was selected.
 	if (tvItem.iImage == ImageListIconIndex(IDB_ARTICLE)) {
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		PopulatePageViewArticle(nIndex);
 	} else if (tvItem.iImage == ImageListIconIndex(IDB_TEMPLATE)) {
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		PopulatePageViewTemplate(nIndex);
 	}
 
@@ -521,22 +557,37 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		return PageEditHandleCommand(hWnd, wMsg, wParam, lParam);
 	case IDM_FILE_NEWARTICLE:
 		// New Article.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		if (CreateNewPage(TRUE))
 			return 1;
 		return PopulateTreeView();
 	case IDM_FILE_NEWTEMPLATE:
 		// New Template.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		if (CreateNewPage(FALSE))
 			return 1;
 		return PopulateTreeView();
 	case IDM_FILE_OPENWS:
 		// Open Workspace.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		return LoadWorkspace(FALSE);
 	case IDM_FILE_REFRESHWS:
 		// Refresh Workspace.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		return LoadWorkspace(TRUE);
 	case IDM_FILE_CLOSEWS:
 		// Close Workspace.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		return CloseWorkspace();
 	case IDM_FILE_SAVE:
 		// Save.
@@ -548,6 +599,9 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		return PopulateTreeView();
 	case IDM_FILE_CLOSE:
 		// Close.
+		if (CheckForUnsavedChanges())
+			return 1;
+
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);
 	case IDM_EDIT_UNDO:
 		// Undo.

@@ -17,6 +17,7 @@ HWND InitializeInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow);
 int TerminateInstance(HINSTANCE hInstance, int nDefRC);
 
 // Uki workspace.
+BOOL CheckForUnsavedChanges();
 LRESULT CloseWorkspace();
 LRESULT LoadWorkspace(BOOL fReload);
 

@@ -35,6 +35,7 @@ void ShowPageEditor();
 void TogglePageView();
 
 // Saving.
+BOOL IsPageDirty();
 LRESULT SaveCurrentPage();
 LRESULT CreateNewPage(BOOL fIsArticle);
 LRESULT SavePageAs();

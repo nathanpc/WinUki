@@ -121,6 +121,9 @@ BOOL PopulatePageViewArticle(const size_t nIndex) {
     SendMessage(hwndPageView, DTM_ADDTEXTW, 0, (LPARAM)szFileContents);
     SendMessage(hwndPageView, DTM_ENDOFSOURCE, 0, 0);
 
+	// Clear the modification flag of the edit control.
+	SendMessage(hwndPageEdit, EM_SETMODIFY, (WPARAM)FALSE, 0);
+
 	// Free the file contents buffer.
 	LocalFree(szFileContents);
 
@@ -150,6 +153,9 @@ BOOL PopulatePageViewTemplate(const size_t nIndex) {
     SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
     SendMessage(hwndPageView, DTM_ADDTEXTW, 0, (LPARAM)szFileContents);
     SendMessage(hwndPageView, DTM_ENDOFSOURCE, 0, 0);
+
+	// Clear the modification flag of the edit control.
+	SendMessage(hwndPageEdit, EM_SETMODIFY, (WPARAM)FALSE, 0);
 
 	// Free the file contents buffer.
 	LocalFree(szFileContents);
@@ -205,6 +211,9 @@ LRESULT SaveCurrentPage() {
 	} else if (IsTemplateLoaded()) {
 		bSuccess = SaveUkiTemplate(ukiOpenTemplate, szContents);
 	}
+
+	// Clear the modification flag of the edit control.
+	SendMessage(hwndPageEdit, EM_SETMODIFY, (WPARAM)FALSE, 0);
 
 	LocalFree(szContents);
 	return (LRESULT)(!bSuccess);
@@ -413,4 +422,13 @@ BOOL IsArticleLoaded() {
  */
 BOOL IsTemplateLoaded() {
 	return ukiOpenTemplate.name != NULL;
+}
+
+/**
+ * Checks if the page text was modified and haven't been saved yet.
+ *
+ * @return TRUE if the text state is dirty.
+ */
+BOOL IsPageDirty() {
+	return SendMessage(hwndPageEdit, EM_GETMODIFY, 0, 0);
 }
