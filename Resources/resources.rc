@@ -63,8 +63,6 @@ IDI_APPICON             ICON    DISCARDABLE     "AppIcon.ico"
 
 IDB_TEMPLATELIBRARY     BITMAP  DISCARDABLE     "TemplateLibrary.bmp"
 IDB_ARTICLE             BITMAP  DISCARDABLE     "Article.bmp"
-IDB_BOOK                BITMAP  DISCARDABLE     "Book.bmp"
-IDB_BOOKOPEN            BITMAP  DISCARDABLE     "BookOpen.bmp"
 IDB_FOLDER              BITMAP  DISCARDABLE     "Folder.bmp"
 IDB_FOLDEROPEN          BITMAP  DISCARDABLE     "FolderOpen.bmp"
 IDB_LIBRARY             BITMAP  DISCARDABLE     "Library.bmp"

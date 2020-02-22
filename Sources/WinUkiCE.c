@@ -160,31 +160,54 @@ BOOL CheckForUnsavedChanges() {
  * Populates the Articles node in the TreeView.
  *
  * @param  htiParent     Parent TreeView node handle.
- * @param  iStartArticle Starting article index.
- * @param  nDeepness     Current deepness level.
- * @param  bRootNode     Is this the root Articles node?
  * @return               Last article index processed.
  */
-size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
-						int nDeepness, BOOL bRootNode) {
+LONG PopulateArticles(HTREEITEM htiParent) {
 	HTREEITEM htiLastItem;
+	HTREEITEM htiFolder;
 	WCHAR szCaption[LBL_MAX_LEN];
+	char szaLastParent[MAX_PATH];
 	UKIARTICLE ukiArticle;
-	size_t iArticle = iStartArticle;
+	LONG iArticle;
 
 	// Go through articles.
 	htiLastItem = (HTREEITEM)NULL;
-	while (GetUkiArticle(&ukiArticle, iArticle)) {
+	htiFolder = htiParent;
+	for (iArticle = 0; iArticle < GetUkiArticlesAvailable(); iArticle++) {
+		// Get article.
+		GetUkiArticle(&ukiArticle, iArticle);
+		
+		// Check if we have a parent.
+		if (ukiArticle.parent != NULL) {
+			// Check if we should add a new folder.
+			if (strcmp(szaLastParent, ukiArticle.parent) != 0) {
+				// Set the new last parent.
+				strcpy(szaLastParent, ukiArticle.parent);
+
+				// Add folder.
+				if (ConvertStringAtoW(szCaption, szaLastParent)) {
+					htiFolder = TreeViewAddItem(htiParent, szCaption,
+						htiLastItem, ImageListIconIndex(IDB_FOLDER), (LPARAM)0);
+				} else {
+					MessageBox(NULL, L"Failed to convert article folder name "
+						L"from ASCII to Unicode.", L"Article Population Failed",
+						MB_OK);
+				}
+			}
+		} else {
+			// Go back to the root.
+			htiFolder = htiParent;
+		}
+
+		// Convert name to Unicode.
 		if (ConvertStringAtoW(szCaption, ukiArticle.name)) {
-			htiLastItem = TreeViewAddItem(htiParent, szCaption,
+			// Append to the TreeView.
+			htiLastItem = TreeViewAddItem(htiFolder, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_ARTICLE),
 				(LPARAM)iArticle);
-		
-			// Go to the next one.
-			iArticle++;
 		} else {
-			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
-				L"Article Population Failed", MB_OK);
+			MessageBox(NULL, L"Failed to convert article name from ASCII to "
+				L"Unicode.", L"Article Population Failed", MB_OK);
 		}
 	}
 
@@ -195,31 +218,29 @@ size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
  * Populates the Templates node in the TreeView.
  *
  * @param  htiParent      Parent TreeView node handle.
- * @param  iStartTemplate Starting template index.
- * @param  nDeepness      Current deepness level.
- * @param  bRootNode      Is this the root Template node?
  * @return                Last template index processed.
  */
-size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
-						 int nDeepness, BOOL bRootNode) {
+LONG PopulateTemplates(HTREEITEM htiParent) {
 	HTREEITEM htiLastItem;
 	WCHAR szCaption[LBL_MAX_LEN];
 	UKITEMPLATE ukiTemplate;
-	size_t iTemplate = iStartTemplate;
-
+	LONG iTemplate;
+	
 	// Go through templates.
 	htiLastItem = (HTREEITEM)NULL;
-	while (GetUkiTemplate(&ukiTemplate, iTemplate)) {
+	for (iTemplate = 0; iTemplate < GetUkiTemplatesAvailable(); iTemplate++) {
+		// Get template.
+		GetUkiTemplate(&ukiTemplate, iTemplate);
+		
+		// Convert name to Unicode.
 		if (ConvertStringAtoW(szCaption, ukiTemplate.name)) {
+			// Append to the TreeView.
 			htiLastItem = TreeViewAddItem(htiParent, szCaption,
 				htiLastItem, ImageListIconIndex(IDB_TEMPLATE),
 				(LPARAM)iTemplate);
-		
-			// Go to the next one.
-			iTemplate++;
 		} else {
-			MessageBox(NULL, L"Failed to convert ASCII string to Unicode.",
-				L"Template Population Failed", MB_OK);
+			MessageBox(NULL, L"Failed to convert template name from ASCII to "
+				L"Unicode.", L"Template Population Failed", MB_OK);
 		}
 	}
 
@@ -245,7 +266,7 @@ LRESULT PopulateTreeView() {
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_LIBRARY), (LPARAM)0);
 
 	// Populate the articles.
-	PopulateArticles(htiArticles, 0, 0, TRUE);
+	PopulateArticles(htiArticles);
 
 	// Add template library root item.
 	LoadString(hInst, IDS_TEMPLATE_LIBRARY, szCaption, LBL_MAX_LEN);
@@ -253,7 +274,7 @@ LRESULT PopulateTreeView() {
 		(HTREEITEM)TVI_ROOT, ImageListIconIndex(IDB_TEMPLATELIBRARY), (LPARAM)0);
 
 	// Populate the templates.
-	PopulateTemplates(htiTemplates, 0, 0, TRUE);
+	PopulateTemplates(htiTemplates);
 
 	// Expand the view.
 	TreeViewExpandNode(htiArticles);

@@ -22,10 +22,8 @@ LRESULT CloseWorkspace();
 LRESULT LoadWorkspace(BOOL fReload);
 
 // Control managers.
-size_t PopulateArticles(HTREEITEM htiParent, size_t iStartArticle,
-						int nDeepness, BOOL bRootNode);
-size_t PopulateTemplates(HTREEITEM htiParent, size_t iStartTemplate,
-						 int nDeepness, BOOL bRootNode);
+LONG PopulateArticles(HTREEITEM htiParent);
+LONG PopulateTemplates(HTREEITEM htiParent);
 LRESULT PopulateTreeView();
 
 // Window procedure.

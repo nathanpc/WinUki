@@ -1571,14 +1571,6 @@ SOURCE=.\Resources\Article.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Resources\Book.bmp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Resources\BookOpen.bmp
-# End Source File
-# Begin Source File
-
 SOURCE=.\Resources\Folder.bmp
 # End Source File
 # Begin Source File
