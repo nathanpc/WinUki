@@ -93,12 +93,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 /**
  * Closes a Uki workspace.
  *
- * @return 0 if a workspace was closed.
+ * @param  fDestroy Are we destroying the window?
+ * @return          0 if a workspace was closed.
  */
-LRESULT CloseWorkspace() {
-	// Set all controls to its defaults.
+LRESULT CloseWorkspace(BOOL fDestroy) {
+	// Set all controls to their defaults.
 	TreeViewClear();
-	ClearPageToDefaults();
+	ClearPageToDefaults(fDestroy);
 
 	// Close Uki.
 	CloseUki();
@@ -116,7 +117,7 @@ LRESULT CloseWorkspace() {
 LRESULT LoadWorkspace(BOOL fReload) {
 	if (fReload) {
 		// Reload workspace.
-		CloseWorkspace();
+		CloseWorkspace(FALSE);
 		if (!ReloadUki()) {
 			return 1;
 		}
@@ -129,7 +130,7 @@ LRESULT LoadWorkspace(BOOL fReload) {
 			return 1;
 		
 		// Close the current workspace.
-		CloseWorkspace();
+		CloseWorkspace(FALSE);
 		
 		// Initialize Uki.
 		if (!InitializeUki(szWikiPath)) {
@@ -638,7 +639,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		if (CheckForUnsavedChanges())
 			return 1;
 
-		return CloseWorkspace();
+		return CloseWorkspace(FALSE);
 	case IDM_FILE_SAVE:
 		// Save.
 		return SaveCurrentPage();
@@ -782,11 +783,10 @@ LRESULT WndMainActivate(HWND hWnd, UINT wMsg, WPARAM wParam,
 LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
 					 LPARAM lParam) {
 	// Clean up.
-	CloseWorkspace();
+	CloseWorkspace(TRUE);
 
 	// Send window destruction message.
 	DestroyWindow(hWnd);
-
 	return 0;
 }
 

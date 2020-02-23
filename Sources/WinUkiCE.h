@@ -36,7 +36,7 @@ int TerminateInstance(HINSTANCE hInstance, int nDefRC);
 
 // Uki workspace.
 BOOL CheckForUnsavedChanges();
-LRESULT CloseWorkspace();
+LRESULT CloseWorkspace(BOOL fDestroy);
 LRESULT LoadWorkspace(BOOL fReload);
 
 // Control managers.

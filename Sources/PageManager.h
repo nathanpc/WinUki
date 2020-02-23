@@ -15,7 +15,7 @@ BOOL IsArticleLoaded();
 BOOL IsTemplateLoaded();
 
 // Initialization.
-void ClearPageToDefaults();
+void ClearPageToDefaults(BOOL fMakeEmpty);
 BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 						HMENU hPageEditID, HMENU hPageViewID);
 

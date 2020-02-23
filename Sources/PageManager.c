@@ -58,10 +58,7 @@ BOOL InitializePageView(HINSTANCE hParentInst, HWND hwndParent, RECT rcClient,
 		hwndParent, hPageViewID, hInst, NULL);
 
 	// Make images fit the HTML viewer.
-	PostMessage(hwndPageView, DTM_ENABLESHRINK, 0, (LPARAM)TRUE);
-
-	// Reset all the controls to the defaults.
-	ClearPageToDefaults();
+	SendMessage(hwndPageView, DTM_ENABLESHRINK, 0, (LPARAM)TRUE);
 	
 	return TRUE;
 }
@@ -326,7 +323,10 @@ LRESULT SavePageAs() {
  */
 BOOL ShowWelcomePage() {
 	// TODO: Load a static folder with the assets from the program root.
-    SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
+	SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
+	SendMessage(hwndPageView, DTM_ADDTEXTW, 0, (LPARAM)L"<h1>Welcome to "
+		L"WinUki</h1>");
+	SendMessage(hwndPageView, DTM_ENDOFSOURCE, 0, 0);
 
 	return TRUE;
 }
@@ -350,11 +350,18 @@ void ClearUkiState() {
 
 /**
  * Clears the page viewer and editor to its defaults.
+ *
+ * @param fMakeEmpty Blanks the HTML viewer instead of showing the welcome
+ *                   message.
  */
-void ClearPageToDefaults() {
+void ClearPageToDefaults(BOOL fMakeEmpty) {
 	// Clear controls.
-	ShowWelcomePage();
 	SendMessage(hwndPageEdit, WM_SETTEXT, 0, (LPARAM)L"");
+	if (fMakeEmpty) {
+		SendMessage(hwndPageView, WM_SETTEXT, 0, (LPARAM)L"");
+	} else {
+		ShowWelcomePage();
+	}
 
 	// Clear internal state.
 	ClearUkiState();
