@@ -81,14 +81,12 @@ BOOL PageEditFindNext(BOOL fShowMsg) {
 	BOOL bSuccess = FALSE;
 
 	// Allocate memory for the haystack and get the text.
-	nTextLen = SendDlgItemMessage(hwndParent, IDC_EDITPAGE,
-		WM_GETTEXTLENGTH, 0, 0) + 1;
+	nTextLen = SendPageEditMessage(WM_GETTEXTLENGTH, 0, 0) + 1;
 	szHaystack = LocalAlloc(LMEM_FIXED, (nTextLen + 1) * sizeof(TCHAR));
-	GetDlgItemText(hwndParent, IDC_EDITPAGE, szHaystack, nTextLen);
+	SendPageEditMessage(WM_GETTEXT, (WPARAM)nTextLen, (LPARAM)szHaystack);
 
 	// Get current cursor position and needle length.
-	SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_GETSEL, (WPARAM)NULL,
-		(LPARAM)&nCursorPos);
+	SendPageEditMessage(EM_GETSEL, (WPARAM)NULL, (LPARAM)&nCursorPos);
 	nNeedleLen = wcslen(szNeedle);
 
 	// Respect the direction chosen.
@@ -102,8 +100,8 @@ BOOL PageEditFindNext(BOOL fShowMsg) {
 	if (nCursorPos >= 0L) {
 		// Select the text.
 		ShowPageEditor();
-		SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_SETSEL,
-			(WPARAM)nCursorPos, (LPARAM)(nCursorPos + nNeedleLen));
+		SendPageEditMessage(EM_SETSEL, (WPARAM)nCursorPos,
+			(LPARAM)(nCursorPos + nNeedleLen));
 		bSuccess = TRUE;
 	} else {
 		// Show not found message.
@@ -134,8 +132,7 @@ BOOL PageEditReplaceNext(BOOL fShowMsg) {
 	// Find something first.
 	if (PageEditFindNext(fShowMsg)) {
 		// Replace selection.
-		SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_REPLACESEL,
-			(WPARAM)TRUE, (LPARAM)szReplacement);
+		SendPageEditMessage(EM_REPLACESEL, (WPARAM)TRUE, (LPARAM)szReplacement);
 		return TRUE;
 	}
 
@@ -501,8 +498,7 @@ BOOL PrepareReplaceNext(BOOL fSelectAll) {
 	BOOL bSelected;
 
 	// Get selection.
-	SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_GETSEL, (WPARAM)&lSelBegin,
-		(LPARAM)&lSelEnd);
+	SendPageEditMessage(EM_GETSEL, (WPARAM)&lSelBegin, (LPARAM)&lSelEnd);
 	bSelected = lSelEnd > lSelBegin;
 
 	// Set direction according to state.
@@ -514,8 +510,7 @@ BOOL PrepareReplaceNext(BOOL fSelectAll) {
 		fDirection = IDC_RADIOFINDDOWN;
 
 		// Set cursor
-		SendDlgItemMessage(hwndParent, IDC_EDITPAGE, EM_SETSEL,
-			(WPARAM)lSelBegin, (LPARAM)lSelBegin);
+		SendPageEditMessage(EM_SETSEL, (WPARAM)lSelBegin, (LPARAM)lSelBegin);
 	}
 
 	return bSelected;
