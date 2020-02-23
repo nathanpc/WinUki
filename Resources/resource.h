@@ -9,8 +9,6 @@
 #define IDI_APPICON                     101
 #define IDB_TEMPLATELIBRARY             121
 #define IDB_ARTICLE                     122
-#define IDB_BOOK                        123
-#define IDB_BOOKOPEN                    124
 #define IDB_FOLDER                      125
 #define IDB_FOLDEROPEN                  126
 #define IDB_LIBRARY                     127
@@ -20,10 +18,6 @@
 #define IDD_REPLACE                     131
 #define IDD_ABOUT                       132
 #define IDR_ACCEL                       138
-#define IDC_CMDBAR                      201
-#define IDC_TREEVIEW                    202
-#define IDC_EDITPAGE                    203
-#define IDC_VIEWPAGE                    204
 #define IDC_FINDNEXT                    1000
 #define IDC_FINDCANCEL                  1001
 #define IDC_REPLACEBTN                  1002

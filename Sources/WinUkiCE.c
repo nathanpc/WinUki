@@ -25,6 +25,25 @@ HINSTANCE hInst;
 int uki_error;
 BOOL fWorkspaceOpen;
 
+// CommandBar buttons.
+const TBBUTTON tbButtons[] = {
+//  BitmapIndex       Command    State       Style       UserData String
+    {0,               0,           0,        TBSTYLE_SEP,       0,   0},
+    {STD_FILENEW,     IDC_BTNEW,   TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0},
+    {STD_FILEOPEN,    IDC_BTOPEN,  TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0},
+    {STD_FILESAVE,    IDC_BTSAVE,  TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0},
+    {0,                 0,         0,        TBSTYLE_SEP,       0,   0},
+    {STD_CUT,         IDC_BTCUT,   TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0},
+    {STD_COPY,        IDC_BTCOPY,  TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0},
+    {STD_PASTE,       IDC_BTPASTE, TBSTATE_ENABLED,
+                                             TBSTYLE_BUTTON,    0,   0}
+};
+
 /**
  * Application's main entry point.
  *
@@ -468,9 +487,19 @@ LRESULT WndMainCreate(HWND hWnd, UINT wMsg, WPARAM wParam,
 	// Initialize the Image List.
 	hIml = InitializeImageList(hInst);
 
-	// Create CommandBar and add exit button.
+	// Create CommandBar.
 	hwndCB = CommandBar_Create(hInst, hWnd, IDC_CMDBAR);
+	
+    // Add the Standard and View bitmaps to the toolbar.
+    CommandBar_AddBitmap(hwndCB, HINST_COMMCTRL, IDB_STD_SMALL_COLOR,
+		STD_BMPS_LEN, 16, 16);
+    CommandBar_AddBitmap(hwndCB, HINST_COMMCTRL, IDB_VIEW_SMALL_COLOR,
+		VIEW_BMPS_LEN, 16, 16);
+
+	// Insert menu bar, toolbar buttons, and the exit button.
 	CommandBar_InsertMenubar(hwndCB, hInst, IDR_MAINMENU, 0);
+    CommandBar_AddButtons(hwndCB, sizeof(tbButtons) / sizeof(TBBUTTON),
+		tbButtons);
 	CommandBar_AddAdornments(hwndCB, 0, 0);
 
 	// Calculate the TreeView control size and position.
