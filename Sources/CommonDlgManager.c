@@ -85,7 +85,7 @@ BOOL SaveNewPage(LPTSTR szFilePath, LPCTSTR szDialogTitle, BOOL fIsArticle) {
     ofn.lStructSize = sizeof(ofn);
 	ofn.lpstrTitle = szDialogTitle;
     ofn.hwndOwner = hwndParent;
-    ofn.lpstrFilter = L"HTML File (*.html)\0*.html\0All Files (*.*)\0*.*\0";
+    ofn.lpstrFilter = L"HTML File (*.htm)\0*.htm;*.html\0All Files (*.*)\0*.*\0";
     ofn.lpstrFile = szFilePath;
     ofn.nMaxFile = MAX_PATH;
     ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
