@@ -27,21 +27,29 @@ BOOL fWorkspaceOpen;
 
 // CommandBar buttons.
 const TBBUTTON tbButtons[] = {
-//  BitmapIndex       Command    State       Style       UserData String
-    {0,               0,           0,        TBSTYLE_SEP,       0,   0},
-    {STD_FILENEW,     IDC_BTNEW,   TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0},
-    {STD_FILEOPEN,    IDC_BTOPEN,  TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0},
-    {STD_FILESAVE,    IDC_BTSAVE,  TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0},
-    {0,                 0,         0,        TBSTYLE_SEP,       0,   0},
-    {STD_CUT,         IDC_BTCUT,   TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0},
-    {STD_COPY,        IDC_BTCOPY,  TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0},
-    {STD_PASTE,       IDC_BTPASTE, TBSTATE_ENABLED,
-                                             TBSTYLE_BUTTON,    0,   0}
+//   BitmapIndex       Command        State     Style       UserData String
+    { 0,               0,             0,        TBSTYLE_SEP,       0,   0 },
+    { STD_FILENEW,     IDC_BTNEW,     TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { STD_FILEOPEN,    IDC_BTOPEN,    TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { STD_FILESAVE,    IDC_BTSAVE,    TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { 0,               0,             0,        TBSTYLE_SEP,       0,   0 },
+    { STD_CUT,         IDC_BTCUT,     TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { STD_COPY,        IDC_BTCOPY,    TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { STD_PASTE,       IDC_BTPASTE,   TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { 0,               0,             0,        TBSTYLE_SEP,       0,   0 },
+	{ STD_UNDO,        IDC_BTUNDO,    TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+    { 0,               0,             0,        TBSTYLE_SEP,       0,   0 },
+	{ STD_FIND,        IDC_BTFIND,    TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 },
+	{ STD_REPLACE,     IDC_BTREPLACE, TBSTATE_ENABLED,
+                                                TBSTYLE_BUTTON,    0,   0 }
 };
 
 /**
@@ -606,6 +614,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDC_EDITPAGE:
 		// Page Editor.
 		return PageEditHandleCommand(hWnd, wMsg, wParam, lParam);
+	case IDC_BTNEW:
 	case IDM_FILE_NEWARTICLE:
 		// New Article.
 		if (CheckForUnsavedChanges())
@@ -622,6 +631,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		if (CreateNewPage(FALSE))
 			return 1;
 		return PopulateTreeView();
+	case IDC_BTOPEN:
 	case IDM_FILE_OPENWS:
 		// Open Workspace.
 		if (CheckForUnsavedChanges())
@@ -640,6 +650,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 			return 1;
 
 		return CloseWorkspace(FALSE);
+	case IDC_BTSAVE:
 	case IDM_FILE_SAVE:
 		// Save.
 		return SaveCurrentPage();
@@ -654,17 +665,21 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 			return 1;
 
 		return SendMessage(hWnd, WM_CLOSE, 0, 0);
+	case IDC_BTUNDO:
 	case IDM_EDIT_UNDO:
 		// Undo.
 		if (SendPageEditMessage(EM_CANUNDO, 0, 0)) 
 			return SendPageEditMessage(WM_UNDO, 0, 0);
 		break;
+	case IDC_BTCUT:
 	case IDM_EDIT_CUT:
 		// Cut.
 		return SendPageEditMessage(WM_CUT, 0, 0);
+	case IDC_BTCOPY:
 	case IDM_EDIT_COPY:
 		// Copy.
 		return SendPageEditMessage(WM_COPY, 0, 0);
+	case IDC_BTPASTE:
 	case IDM_EDIT_PASTE:
 		// Paste.
 		return SendPageEditMessage(WM_PASTE, 0, 0);
@@ -674,6 +689,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 	case IDM_EDIT_SELECTALL:
 		// Select All.
 		return SendPageEditMessage(EM_SETSEL, 0, -1);
+	case IDC_BTFIND:
 	case IDM_EDIT_FIND:
 		// Show Find dialog.
 		ShowFindDialog();
@@ -682,6 +698,7 @@ LRESULT WndMainCommand(HWND hWnd, UINT wMsg, WPARAM wParam,
 		// Find Next.
 		PageEditFindNext(TRUE);
 		break;
+	case IDC_BTREPLACE:
 	case IDM_EDIT_REPLACE:
 		// Show Replace dialog.
 		ShowReplaceDialog();
@@ -782,6 +799,10 @@ LRESULT WndMainActivate(HWND hWnd, UINT wMsg, WPARAM wParam,
  */
 LRESULT WndMainClose(HWND hWnd, UINT wMsg, WPARAM wParam,
 					 LPARAM lParam) {
+	// Check for unsaved changes.
+	if (CheckForUnsavedChanges())
+		return 1;
+
 	// Clean up.
 	CloseWorkspace(TRUE);
 

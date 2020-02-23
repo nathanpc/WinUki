@@ -18,12 +18,15 @@
 #define IDC_VIEWPAGE 204
 
 // CommandBar buttons.
-#define IDC_BTNEW   211
-#define IDC_BTOPEN  212
-#define IDC_BTSAVE  213
-#define IDC_BTCUT   214
-#define IDC_BTCOPY  215
-#define IDC_BTPASTE 216
+#define IDC_BTNEW     211
+#define IDC_BTOPEN    212
+#define IDC_BTSAVE    213
+#define IDC_BTCUT     214
+#define IDC_BTCOPY    215
+#define IDC_BTPASTE   216
+#define IDC_BTUNDO    217
+#define IDC_BTFIND    218
+#define IDC_BTREPLACE 219
 
 // Number of bitmaps in the standard and view image lists.
 #define STD_BMPS_LEN  STD_PRINT + 1
